@@ -7,6 +7,10 @@ export default function AdminLayout() {
   return (
     <Tabs>
       <Tabs.Screen name="students" options={{ title: 'Murid' }} />
+      <Tabs.Screen name="import" options={{ title: 'Impor' }} />
+      <Tabs.Screen name="staff" options={{ title: 'Petugas' }} />
+      <Tabs.Screen name="reports" options={{ title: 'Laporan' }} />
+      <Tabs.Screen name="student/[nis]" options={{ href: null, title: 'Detail murid' }} />
     </Tabs>
   );
 }
