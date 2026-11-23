@@ -74,7 +74,7 @@ export function ConfirmSheet({ result, busy, error, onConfirm, onClose }: Props)
 }
 
 const styles = StyleSheet.create({
-  sheet: { ...glass, backgroundColor: colors.sheet, borderTopWidth: 6, padding: 20, gap: 12, borderTopLeftRadius: radius, borderTopRightRadius: radius },
+  sheet: { ...glass, backgroundColor: colors.sheet, width: '100%', maxWidth: 560, alignSelf: 'center', borderTopWidth: 6, padding: 20, gap: 12, borderTopLeftRadius: radius, borderTopRightRadius: radius },
   row: { flexDirection: 'row', gap: 14, alignItems: 'center' },
   photo: { width: 72, height: 72, borderRadius: radius },
   noPhoto: { backgroundColor: colors.line },

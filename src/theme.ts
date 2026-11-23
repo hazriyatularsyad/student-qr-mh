@@ -19,9 +19,11 @@ export const colors = {
 export const gradient = ['#E9CF8C', '#D4A94F', '#C99A33'] as const;
 export const radius = 16;
 
+// System sans only: heavy weight + tight tracking carries the headings.
 export const fonts = {
-  display: Platform.select({ ios: 'Georgia', android: 'serif', default: 'Georgia, "Times New Roman", serif' }),
+  display: Platform.select({ ios: 'System', android: 'sans-serif-medium', default: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif' }),
 };
+export const hairline = 'rgba(46,34,8,0.14)';
 
 export const glass: ViewStyle = {
   backgroundColor: colors.surface,

@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Btn, Field } from '@/components/form';
+import { Btn, Field, Heading, Panel, Separator } from '@/components/form';
 import { createStaff, listStaff, setStaffActive, type StaffRow } from '@/lib/admin';
-import { colors, radius, glass } from '@/theme';
+import { useWide } from '@/lib/layout';
+import { colors, glass, radius } from '@/theme';
 
 export default function Staff() {
+  const wide = useWide();
   const [rows, setRows] = useState<StaffRow[]>([]);
   const [f, setF] = useState({ email: '', password: '', full_name: '' });
   const [role, setRole] = useState<'petugas' | 'admin'>('petugas');
@@ -21,41 +23,53 @@ export default function Staff() {
 
   return (
     <View style={s.wrap}>
-      <Field placeholder="Nama lengkap" value={f.full_name} onChangeText={(v) => setF({ ...f, full_name: v })} />
-      <Field placeholder="Email" autoCapitalize="none" keyboardType="email-address" value={f.email} onChangeText={(v) => setF({ ...f, email: v })} />
-      <Field placeholder="Kata sandi (min. 8 karakter)" secureTextEntry value={f.password} onChangeText={(v) => setF({ ...f, password: v })} />
-      <View style={s.chips}>
-        {(['petugas', 'admin'] as const).map((r) => (
-          <Pressable key={r} onPress={() => setRole(r)} style={[s.chip, role === r && { backgroundColor: colors.accent }]}>
-            <Text style={[s.chipText, role === r && { color: '#fff' }]}>{r}</Text>
-          </Pressable>
-        ))}
-      </View>
-      <Btn label="Buat akun" onPress={create} />
+      <Heading>Petugas</Heading>
       {msg && <Text style={s.msg}>{msg}</Text>}
-      <FlatList data={rows} keyExtractor={(r) => r.id} renderItem={({ item }) => (
-        <View style={s.row}>
-          <View style={{ flex: 1 }}>
-            <Text style={s.name}>{item.full_name}</Text>
-            <Text style={s.meta}>{item.role}{item.is_active ? '' : ' · nonaktif'}</Text>
+      <View style={[{ gap: 12 }, wide && { flexDirection: 'row', alignItems: 'flex-start' }]}>
+        <Panel style={wide ? { width: 320 } : undefined}>
+          <Field placeholder="Nama lengkap" value={f.full_name} onChangeText={(v) => setF({ ...f, full_name: v })} />
+          <Field placeholder="Email" autoCapitalize="none" keyboardType="email-address" value={f.email} onChangeText={(v) => setF({ ...f, email: v })} />
+          <Field placeholder="Kata sandi, min. 8 karakter" secureTextEntry value={f.password} onChangeText={(v) => setF({ ...f, password: v })} />
+          <View style={s.chips}>
+            {(['petugas', 'admin'] as const).map((r) => (
+              <Pressable key={r} onPress={() => setRole(r)} style={[s.chip, role === r && { backgroundColor: colors.goldDeep }]}>
+                <Text style={[s.chipText, role === r && { color: colors.cream }]}>{r}</Text>
+              </Pressable>
+            ))}
           </View>
-          <Pressable onPress={async () => { await setStaffActive(item.id, !item.is_active); void load(); }}>
-            <Text style={s.link}>{item.is_active ? 'Nonaktifkan' : 'Aktifkan'}</Text>
-          </Pressable>
-        </View>
-      )} />
+          <Btn label="Buat akun" onPress={create} />
+        </Panel>
+        <FlatList
+          style={[s.list, { flex: 1 }]}
+          data={rows}
+          keyExtractor={(r) => r.id}
+          ItemSeparatorComponent={Separator}
+          renderItem={({ item }) => (
+            <View style={s.row}>
+              <View style={{ flex: 1 }}>
+                <Text style={s.name}>{item.full_name}</Text>
+                <Text style={s.meta}>{item.role}{item.is_active ? '' : ', nonaktif'}</Text>
+              </View>
+              <Pressable onPress={async () => { await setStaffActive(item.id, !item.is_active); void load(); }}>
+                <Text style={s.link}>{item.is_active ? 'Nonaktifkan' : 'Aktifkan'}</Text>
+              </Pressable>
+            </View>
+          )}
+        />
+      </View>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  wrap: { flex: 1, padding: 16, gap: 8, backgroundColor: colors.bg },
+  wrap: { flex: 1, padding: 16, gap: 12 },
+  msg: { color: colors.goldDeep, fontSize: 15, fontWeight: '600' },
   chips: { flexDirection: 'row', gap: 8 },
-  chip: { minHeight: 40, paddingHorizontal: 16, borderRadius: 20, ...glass, borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
-  chipText: { fontSize: 15, color: colors.ink },
-  msg: { color: colors.accent, fontSize: 15 },
-  row: { flexDirection: 'row', alignItems: 'center', ...glass, borderRadius: radius, padding: 14, marginBottom: 8 },
+  chip: { minHeight: 44, paddingHorizontal: 18, borderRadius: radius, borderWidth: 1, borderColor: colors.line, backgroundColor: 'rgba(255,255,255,0.45)', justifyContent: 'center' },
+  chipText: { fontSize: 15, fontWeight: '700', color: colors.ink },
+  list: { ...glass, borderRadius: radius, flexGrow: 0 },
+  row: { flexDirection: 'row', alignItems: 'center', padding: 16 },
   name: { fontSize: 17, fontWeight: '700', color: colors.ink },
   meta: { fontSize: 14, color: colors.muted },
-  link: { color: colors.accent, fontSize: 15, fontWeight: '700' },
+  link: { color: colors.goldDeep, fontSize: 15, fontWeight: '800', paddingVertical: 8 },
 });

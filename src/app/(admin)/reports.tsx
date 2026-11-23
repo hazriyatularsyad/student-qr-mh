@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Field } from '@/components/form';
+import { Field, Heading, Panel } from '@/components/form';
 import { LogList } from '@/components/LogList';
 import { listLogs } from '@/lib/logs';
 import type { LogRow } from '@/lib/types';
@@ -25,10 +25,13 @@ export default function Reports() {
 
   return (
     <View style={s.wrap}>
+      <Heading>Laporan</Heading>
+      <Panel>
       <Field placeholder="Tanggal (YYYY-MM-DD, kosong = semua)" value={date} onChangeText={setDate} />
       <Field placeholder="Kelas" value={cls} onChangeText={setCls} autoCapitalize="characters" />
       <Field placeholder="Status: verified / duplicate / rejected" value={status} onChangeText={setStatus} autoCapitalize="none" />
       <Field placeholder="Cari nama atau NIS" value={q} onChangeText={setQ} />
+      </Panel>
       {err && <Text style={s.err}>{err}</Text>}
       <LogList rows={rows} />
     </View>

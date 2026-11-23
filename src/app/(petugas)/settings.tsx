@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Heading, Panel } from '@/components/form';
 import { useAuth } from '@/lib/auth';
 import { getSpeechOpts, getVoices, initVoices, setSpeechOpts, speechQueue } from '@/lib/tts';
 import { colors, radius, glass, primaryButton } from '@/theme';
@@ -37,6 +38,8 @@ export default function Settings() {
 
   return (
     <View style={s.wrap}>
+      <Heading>Pengaturan suara</Heading>
+      <Panel>
       <Stepper label="Kecepatan suara" value={rate} onChange={(v) => update({ rate: v, pitch })} />
       <Stepper label="Nada suara" value={pitch} onChange={(v) => update({ rate, pitch: v })} />
       <Text style={s.label}>
@@ -55,6 +58,7 @@ export default function Settings() {
       <Pressable style={s.btn} onPress={() => speechQueue.enqueue('Tes speaker. Aksa, kelas tiga A, sudah dijemput.')}>
         <Text style={s.btnText}>Tes Speaker</Text>
       </Pressable>
+      </Panel>
       <Pressable style={s.btn} onPress={() => void signOut()}>
         <Text style={s.btnText}>Keluar</Text>
       </Pressable>

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LogList } from '@/components/LogList';
+import { Field, Heading, Panel } from '@/components/form';
 import { listLogs } from '@/lib/logs';
 import type { LogRow } from '@/lib/types';
-import { colors, radius, glass } from '@/theme';
+import { colors, radius } from '@/theme';
 
 const STATUSES = [
   { label: 'Semua', value: undefined },
@@ -36,16 +37,19 @@ export default function Logs() {
 
   return (
     <View style={s.wrap}>
-      <TextInput style={s.input} placeholder="Cari nama atau NIS" value={q} onChangeText={setQ} />
-      <TextInput style={s.input} placeholder="Kelas" value={cls} onChangeText={setCls} autoCapitalize="characters" />
-      <View style={s.chips}>
-        {STATUSES.map((st) => (
-          <Pressable key={st.label} onPress={() => setStatus(st.value)}
-            style={[s.chip, status === st.value && { backgroundColor: colors.accent }]}>
-            <Text style={[s.chipText, status === st.value && { color: '#fff' }]}>{st.label}</Text>
-          </Pressable>
-        ))}
-      </View>
+      <Heading>Log hari ini</Heading>
+      <Panel>
+        <Field placeholder="Cari nama atau NIS" value={q} onChangeText={setQ} />
+        <Field placeholder="Kelas" value={cls} onChangeText={setCls} autoCapitalize="characters" />
+        <View style={s.chips}>
+          {STATUSES.map((st) => (
+            <Pressable key={st.label} onPress={() => setStatus(st.value)}
+              style={[s.chip, status === st.value && { backgroundColor: colors.goldDeep }]}>
+              <Text style={[s.chipText, status === st.value && { color: colors.cream }]}>{st.label}</Text>
+            </Pressable>
+          ))}
+        </View>
+      </Panel>
       {error && <Text style={s.error}>{error}</Text>}
       <LogList rows={rows} />
     </View>
@@ -53,10 +57,9 @@ export default function Logs() {
 }
 
 const s = StyleSheet.create({
-  wrap: { flex: 1, padding: 16, gap: 10, backgroundColor: colors.bg },
-  input: { minHeight: 48, ...glass, borderRadius: radius, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 14, fontSize: 16 },
+  wrap: { flex: 1, padding: 16, gap: 12 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { minHeight: 40, paddingHorizontal: 14, borderRadius: 20, ...glass, borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
-  chipText: { fontSize: 15, color: colors.ink },
+  chip: { minHeight: 44, paddingHorizontal: 16, borderRadius: radius, backgroundColor: 'rgba(255,255,255,0.45)', borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
+  chipText: { fontSize: 15, fontWeight: '700', color: colors.ink },
   error: { color: colors.danger, fontSize: 15 },
 });

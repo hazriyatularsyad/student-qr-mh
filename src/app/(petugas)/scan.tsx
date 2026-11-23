@@ -87,5 +87,5 @@ const styles = StyleSheet.create({
   btn: { minHeight: 52, borderRadius: 14, ...primaryButton, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' },
   btnText: { color: colors.ink, fontSize: 17, fontWeight: '700' },
   repeat: { position: 'absolute', top: 16, right: 16, minHeight: 44, borderRadius: 22, backgroundColor: colors.sheet, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 16, alignItems: 'center', justifyContent: 'center' },
-  sheetWrap: { position: 'absolute', left: 0, right: 0, bottom: 0 },
+  sheetWrap: { position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center' },
 });
