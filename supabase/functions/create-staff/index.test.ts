@@ -43,3 +43,18 @@ Deno.test('removes the auth user when the staff insert fails', async () => {
   assert.equal(res.status, 500);
   assert.ok(calls.includes('deleteAuthUser'));
 });
+
+Deno.test('preflight OPTIONS answers 204 with CORS headers and needs no auth', async () => {
+  const res = await createHandler(deps(null))(new Request('http://x/create-staff', { method: 'OPTIONS' }));
+  assert.equal(res.status, 204);
+  assert.ok(res.headers.get('access-control-allow-origin'));
+  assert.match(res.headers.get('access-control-allow-headers') ?? '', /authorization/i);
+});
+
+Deno.test('error and success responses also carry CORS headers', async () => {
+  const denied = await createHandler(deps('petugas'))(req({ auth: 'Bearer t' }));
+  assert.equal(denied.status, 403);
+  assert.ok(denied.headers.get('access-control-allow-origin'));
+  const created = await createHandler(deps('admin'))(req({ auth: 'Bearer t' }));
+  assert.ok(created.headers.get('access-control-allow-origin'));
+});

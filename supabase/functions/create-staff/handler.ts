@@ -5,10 +5,18 @@ export type Deps = {
   deleteAuthUser: (id: string) => Promise<void>;
 };
 
+// The browser preview calls this function cross-origin, so every response needs CORS headers.
+const cors = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-headers': 'authorization, x-client-info, apikey, content-type',
+  'access-control-allow-methods': 'POST, OPTIONS',
+};
+
 const json = (status: number, payload: unknown) =>
-  new Response(JSON.stringify(payload), { status, headers: { 'content-type': 'application/json' } });
+  new Response(JSON.stringify(payload), { status, headers: { 'content-type': 'application/json', ...cors } });
 
 export const createHandler = (deps: Deps) => async (req: Request): Promise<Response> => {
+  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
   const auth = req.headers.get('authorization');
   if (!auth) return json(401, { error: 'Belum login.' });
   if ((await deps.getCallerRole(auth)) !== 'admin') return json(403, { error: 'Hanya admin.' });
