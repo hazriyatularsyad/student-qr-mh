@@ -1,4 +1,6 @@
 begin;
+-- hermetic: ignore any logs already in the local database (rolled back at the end)
+delete from public.pickup_logs;
 select plan(10);
 
 -- seed as superuser
