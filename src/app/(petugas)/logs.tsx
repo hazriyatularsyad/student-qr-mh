@@ -68,8 +68,8 @@ export default function Logs() {
         <View style={s.chips}>
           {STATUSES.map((st) => (
             <Pressable key={st.label} onPress={() => setStatus(st.value)}
-              style={[s.chip, status === st.value && { backgroundColor: colors.goldDeep }]}>
-              <Text style={[s.chipText, status === st.value && { color: colors.cream }]}>{st.label}</Text>
+              style={[s.chip, status === st.value && { backgroundColor: colors.navy }]}>
+              <Text style={[s.chipText, status === st.value && { color: '#FFFFFF' }]}>{st.label}</Text>
             </Pressable>
           ))}
         </View>
@@ -83,7 +83,7 @@ export default function Logs() {
 const s = StyleSheet.create({
   wrap: { flex: 1, padding: 16, gap: 12 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { minHeight: 44, paddingHorizontal: 16, borderRadius: radius, backgroundColor: 'rgba(255,255,255,0.45)', borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
+  chip: { minHeight: 44, paddingHorizontal: 16, borderRadius: radius, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
   chipText: { fontSize: 15, fontWeight: '700', color: colors.ink },
   last: { color: '#fff', fontSize: 20, fontWeight: '800' },
   error: { color: colors.danger, fontSize: 15 },

@@ -1,58 +1,57 @@
 import { Platform, type ViewStyle } from 'react-native';
 
-// Gold base, cream primary, frosted-glass surfaces. Dark brown ink keeps text legible outdoors.
+// Corporate palette: navy brand, white surfaces, cool grey canvas, pearl-gold accent.
 export const colors = {
-  bg: 'transparent',
-  surface: 'rgba(255,246,224,0.62)',
-  sheet: 'rgba(255,246,224,0.94)',
-  cream: '#FFF6E0',
-  gold: '#C99A33',
-  goldDeep: '#8A6414',
-  ink: '#2E2208',
-  muted: '#6B5420',
-  accent: '#8A6414',
-  ok: '#2F6B3A',
-  warn: '#9A5B00',
-  danger: '#A62B1F',
-  line: 'rgba(255,255,255,0.72)',
+  bg: '#F4F6FA',
+  surface: '#FFFFFF',
+  sheet: '#FFFFFF',
+  cream: '#EEF2F9', // light neutral tint (steppers, pills)
+  gold: '#C9962B',
+  goldDeep: '#9A6B00',
+  navy: '#14274E',
+  ink: '#0F172A',
+  muted: '#5B6B82',
+  accent: '#2563EB',
+  ok: '#12794A',
+  warn: '#B26A00',
+  danger: '#C93550',
+  line: '#D8DFEA',
 };
-export const gradient = ['#E9CF8C', '#D4A94F', '#C99A33'] as const;
-export const radius = 16;
+export const radius = 14;
 
-// System sans only: heavy weight + tight tracking carries the headings.
+// System sans only: weight and size carry the hierarchy.
 export const fonts = {
   display: Platform.select({ ios: 'System', android: 'sans-serif-medium', default: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif' }),
 };
-export const hairline = 'rgba(46,34,8,0.14)';
+export const hairline = '#E3E8F0';
 
+// Card surface: white, thin border, soft layered shadow.
 export const glass: ViewStyle = {
   backgroundColor: colors.surface,
   borderWidth: 1,
-  borderColor: colors.line,
-  shadowColor: '#5A4210',
-  shadowOpacity: 0.18,
-  shadowRadius: 18,
-  shadowOffset: { width: 0, height: 8 },
-  elevation: 3,
-  ...(Platform.OS === 'web' ? ({ backdropFilter: 'blur(18px) saturate(140%)' } as ViewStyle) : {}),
+  borderColor: hairline,
+  shadowColor: '#0F172A',
+  shadowOpacity: 0.06,
+  shadowRadius: 10,
+  shadowOffset: { width: 0, height: 3 },
+  elevation: 2,
 };
 
-// Primary action: cream fill, gold edge, dark text.
+// Primary action: solid navy, white text.
 export const primaryButton: ViewStyle = {
-  backgroundColor: colors.cream,
-  borderWidth: 2,
-  borderColor: colors.goldDeep,
+  backgroundColor: colors.navy,
 };
 
-// Jewel tones for bento tiles. Each has a meaning: forest = done, coral = duplicate, plum = rejected.
+// Tile tones. Meaning: emerald = done, rose = duplicate, violet = rejected.
 export const tones = {
   glass: { bg: colors.surface, fg: colors.ink, sub: colors.muted },
-  gold: { bg: '#E3B64F', fg: '#2E2208', sub: '#5A4210' },
-  teal: { bg: '#1D7F78', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
-  indigo: { bg: '#4A55A2', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
-  coral: { bg: '#C4472B', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.88)' },
-  plum: { bg: '#8A3E7B', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
-  forest: { bg: '#2F6B3A', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
+  gold: { bg: '#F2B53A', fg: '#2B1D00', sub: '#5C4300' },
+  teal: { bg: '#0B7A7C', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.86)' },
+  indigo: { bg: '#2C4DB5', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.86)' },
+  coral: { bg: '#C93550', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.88)' },
+  plum: { bg: '#6B46C1', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.86)' },
+  forest: { bg: '#12794A', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.86)' },
+  navy: { bg: '#14274E', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.8)' },
 } as const;
 export type Tone = keyof typeof tones;
 export const avatarTones: Tone[] = ['teal', 'indigo', 'coral', 'plum', 'forest'];

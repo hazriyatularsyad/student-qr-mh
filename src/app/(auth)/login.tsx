@@ -26,7 +26,7 @@ export default function Login() {
   return (
     <View style={[s.wrap, wide && { flexDirection: 'row', alignItems: 'center', maxWidth: 980 }]}>
       <View style={[s.intro, wide && { flex: 1, paddingRight: 48 }]}>
-        <View style={s.logo}><Icon name="qr-code" size={30} color={colors.goldDeep} /></View>
+        <View style={s.logo}><Icon name="qr-code" size={30} color={colors.gold} /></View>
         <Text style={s.title}>Penjemputan{'\n'}murid</Text>
         <Text style={s.sub}>Pindai kartu QR wali, konfirmasi, dan nama murid diumumkan lewat speaker gerbang.</Text>
       </View>
@@ -45,13 +45,13 @@ export default function Login() {
 const s = StyleSheet.create({
   wrap: { flex: 1, justifyContent: 'center', padding: 24, gap: 28, width: '100%', maxWidth: 480, alignSelf: 'center' },
   intro: { gap: 12 },
-  logo: { width: 56, height: 56, borderRadius: radius, alignItems: 'center', justifyContent: 'center', ...glass },
-  title: { fontFamily: fonts.display, fontSize: 44, lineHeight: 46, fontWeight: '800', letterSpacing: -1.2, color: colors.ink },
+  logo: { width: 56, height: 56, borderRadius: radius, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.navy },
+  title: { fontFamily: fonts.display, fontSize: 44, lineHeight: 46, fontWeight: '800', letterSpacing: -1.2, color: colors.navy },
   sub: { fontSize: 17, lineHeight: 24, color: colors.muted, maxWidth: 420 },
   form: { ...glass, borderRadius: radius, padding: 20, gap: 8 },
   label: { fontSize: 14, fontWeight: '700', color: colors.ink, marginTop: 4 },
-  input: { minHeight: 52, backgroundColor: 'rgba(255,255,255,0.55)', borderRadius: radius, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 16, fontSize: 17, color: colors.ink },
+  input: { minHeight: 52, backgroundColor: '#FFFFFF', borderRadius: 12, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 16, fontSize: 17, color: colors.ink },
   error: { color: colors.danger, fontSize: 15, fontWeight: '600' },
   btn: { minHeight: 56, ...primaryButton, borderRadius: radius, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
-  btnText: { color: colors.ink, fontSize: 18, fontWeight: '800' },
+  btnText: { color: '#FFFFFF', fontSize: 18, fontWeight: '800' },
 });

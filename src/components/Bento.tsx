@@ -63,7 +63,7 @@ export function Avatar({ name, seed }: { name: string; seed: string }) {
 
 const s = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', margin: -GUTTER },
-  tile: { flex: 1, borderRadius: radius + 6, padding: 16, justifyContent: 'space-between', gap: 8, overflow: 'hidden' },
+  tile: { flex: 1, borderRadius: radius + 2, padding: 16, justifyContent: 'space-between', gap: 8, overflow: 'hidden' },
   label: { fontSize: 14, fontWeight: '700' },
   value: { fontWeight: '800', letterSpacing: -1 },
   avatar: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },

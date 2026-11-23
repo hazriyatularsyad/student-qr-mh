@@ -2,7 +2,6 @@ import { Pressable, StyleSheet } from 'react-native';
 import { Icon } from '@/components/Icon';
 import { useAuth } from '@/lib/auth';
 import { confirmAction } from '@/lib/confirm';
-import { colors } from '@/theme';
 
 export function LogoutButton() {
   const { signOut } = useAuth();
@@ -14,7 +13,7 @@ export function LogoutButton() {
       style={({ pressed }) => [s.btn, pressed && { opacity: 0.6 }]}
       onPress={() => confirmAction('Keluar dari aplikasi?', 'Anda perlu login lagi untuk memindai.', () => void signOut(), 'Keluar')}
     >
-      <Icon name="log-out-outline" size={24} color={colors.ink} />
+      <Icon name="log-out-outline" size={24} color="#FFFFFF" />
     </Pressable>
   );
 }

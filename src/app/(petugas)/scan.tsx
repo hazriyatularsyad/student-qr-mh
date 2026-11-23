@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16, padding: 24 },
   text: { fontSize: 18, color: colors.ink, textAlign: 'center' },
   btn: { minHeight: 52, borderRadius: 14, ...primaryButton, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' },
-  btnText: { color: colors.ink, fontSize: 17, fontWeight: '700' },
+  btnText: { color: '#FFFFFF', fontSize: 17, fontWeight: '700' },
   cameraTile: { flex: 1, minHeight: 240, borderRadius: 28, overflow: 'hidden', backgroundColor: '#1B1405' },
   frameWrap: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' },
   frame: { width: 220, height: 220 },

@@ -8,6 +8,7 @@ import { listLogs } from '@/lib/logs';
 import { summarize } from '@/lib/summary';
 import { colors } from '@/theme';
 
+const longDate = () => new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Jakarta' });
 const today = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
 
 export default function Home() {
@@ -28,6 +29,10 @@ export default function Home() {
 
   return (
     <ScrollView contentContainerStyle={s.wrap}>
+      <View style={s.intro}>
+        <Text style={s.date}>{longDate()}</Text>
+        <Text style={s.lead}>Ringkasan penjemputan hari ini</Text>
+      </View>
       {err && <Text style={s.err}>{err}</Text>}
       <BentoGrid>
         <Tile tone="teal" span={2} rows={2}>
@@ -75,6 +80,9 @@ export default function Home() {
 
 const s = StyleSheet.create({
   wrap: { padding: 12 },
+  intro: { paddingHorizontal: 6, paddingBottom: 8, gap: 2 },
+  date: { fontSize: 14, fontWeight: '700', color: colors.muted },
+  lead: { fontSize: 22, fontWeight: '800', color: colors.ink, letterSpacing: -0.3 },
   of: { color: 'rgba(255,255,255,0.9)', fontSize: 16, fontWeight: '600' },
   barBg: { height: 10, borderRadius: 5, backgroundColor: 'rgba(255,255,255,0.25)', overflow: 'hidden' },
   barFill: { height: 10, borderRadius: 5, backgroundColor: '#fff' },
