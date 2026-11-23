@@ -38,11 +38,12 @@ type TileProps = {
   shape?: 'rect' | 'folder';
   onPress?: () => void;
   label?: string;
+  selected?: boolean;
   children: ReactNode;
   style?: ViewStyle;
 };
 
-export function Tile({ tone = 'glass', span = 1, rows = 1, shape = 'rect', onPress, label, children, style }: TileProps) {
+export function Tile({ tone = 'glass', span = 1, rows = 1, shape = 'rect', onPress, label, selected, children, style }: TileProps) {
   const cols = useWide() ? 4 : 2;
   const [size, setSize] = useState({ w: 0, h: 0 });
   const width = `${(Math.min(span, cols) / cols) * 100}%` as `${number}%`;
@@ -68,7 +69,7 @@ export function Tile({ tone = 'glass', span = 1, rows = 1, shape = 'rect', onPre
   return (
     <View style={{ width, padding: GUTTER }}>
       {onPress ? (
-        <Pressable accessibilityRole="button" accessibilityLabel={label} onPress={onPress} onLayout={onLayout}
+        <Pressable accessibilityRole="button" accessibilityLabel={label} accessibilityState={selected === undefined ? undefined : { selected }} onPress={onPress} onLayout={onLayout}
           style={({ pressed }) => [...body, pressed && { opacity: 0.85, transform: [{ scale: 0.985 }] }]}>
           {inner}
         </Pressable>

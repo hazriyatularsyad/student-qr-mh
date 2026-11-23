@@ -45,7 +45,7 @@ export const tones = {
   coral: { bg: '#FF7B5C', fg: '#0A0A0B', sub: 'rgba(10,10,11,0.7)' },
   plum: { bg: '#FF5E7E', fg: '#0A0A0B', sub: 'rgba(10,10,11,0.7)' },
   teal: { bg: '#33C9B8', fg: '#0A0A0B', sub: 'rgba(10,10,11,0.68)' },
-  indigo: { bg: '#33C9B8', fg: '#0A0A0B', sub: 'rgba(10,10,11,0.68)' },
+  indigo: { bg: '#AFA2FF', fg: '#0A0A0B', sub: 'rgba(10,10,11,0.68)' },
   navy: { bg: '#17171B', fg: '#FFFFFF', sub: '#9BA1AB' },
 } as const;
 export type Tone = keyof typeof tones;
