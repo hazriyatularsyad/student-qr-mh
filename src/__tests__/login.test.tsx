@@ -35,3 +35,13 @@ test('pressing enter in the password field submits', async () => {
   await fireEvent(screen.getByPlaceholderText('Kata sandi'), 'submitEditing');
   await waitFor(() => expect(signIn).toHaveBeenCalledWith('a@b.id', 'rahasia123'));
 });
+
+test('the eye button shows and hides the password', async () => {
+  (useAuth as jest.Mock).mockReturnValue({ signIn: jest.fn(async () => null) });
+  await render(<Login />);
+  expect(screen.getByPlaceholderText('Kata sandi').props.secureTextEntry).toBe(true);
+  await fireEvent.press(screen.getByLabelText('Tampilkan kata sandi'));
+  expect(screen.getByPlaceholderText('Kata sandi').props.secureTextEntry).toBe(false);
+  await fireEvent.press(screen.getByLabelText('Sembunyikan kata sandi'));
+  expect(screen.getByPlaceholderText('Kata sandi').props.secureTextEntry).toBe(true);
+});

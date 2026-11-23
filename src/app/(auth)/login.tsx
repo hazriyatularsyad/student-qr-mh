@@ -14,6 +14,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [showPw, setShowPw] = useState(false);
 
   const submit = async () => {
     setBusy(true);
@@ -34,7 +35,18 @@ export default function Login() {
         <Text style={s.label}>Email</Text>
         <TextInput style={s.input} autoCapitalize="none" keyboardType="email-address" value={email} onChangeText={setEmail} accessibilityLabel="Email" placeholder="Email" />
         <Text style={s.label}>Kata sandi</Text>
-        <TextInput style={s.input} secureTextEntry value={password} onChangeText={setPassword} onSubmitEditing={submit} returnKeyType="go" accessibilityLabel="Kata sandi" placeholder="Kata sandi" />
+        <View>
+          <TextInput style={[s.input, { paddingRight: 52 }]} secureTextEntry={!showPw} value={password} onChangeText={setPassword} onSubmitEditing={submit} returnKeyType="go" accessibilityLabel="Kata sandi" placeholder="Kata sandi" placeholderTextColor={colors.muted} />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={showPw ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+            hitSlop={6}
+            style={s.eye}
+            onPress={() => setShowPw(!showPw)}
+          >
+            <Icon name={showPw ? 'eye-off-outline' : 'eye-outline'} size={22} color={colors.muted} />
+          </Pressable>
+        </View>
         {error && <Text style={s.error}>{error}</Text>}
         <Pressable style={s.btn} disabled={busy} onPress={submit}><Text style={s.btnText}>Masuk</Text></Pressable>
       </View>
@@ -51,6 +63,7 @@ const s = StyleSheet.create({
   form: { ...glass, borderRadius: radius, padding: 20, gap: 8 },
   label: { fontSize: 14, fontWeight: '700', color: colors.ink, marginTop: 4 },
   input: { minHeight: 52, backgroundColor: colors.surface, borderRadius: 12, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 16, fontSize: 17, color: colors.ink },
+  eye: { position: 'absolute', right: 4, top: 0, bottom: 0, width: 48, alignItems: 'center', justifyContent: 'center' },
   error: { color: colors.danger, fontSize: 15, fontWeight: '600' },
   btn: { minHeight: 56, ...primaryButton, borderRadius: radius, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
   btnText: { color: colors.onBright, fontSize: 18, fontWeight: '800' },
