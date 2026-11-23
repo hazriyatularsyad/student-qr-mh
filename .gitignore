@@ -1,0 +1,6 @@
+.env*
+node_modules
+ios/
+android/
+.expo/
+.superpowers/
