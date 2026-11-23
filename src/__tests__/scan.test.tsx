@@ -48,7 +48,7 @@ test('Konfirmasi records the pickup and then speaks name and class', async () =>
   await scan();
   await fireEvent.press(await screen.findByText('Konfirmasi'));
   await waitFor(() => expect(Speech.speak).toHaveBeenCalledWith(
-    'Aksa kelas 3 A sudah dijemput.', expect.objectContaining({ language: 'id-ID' })));
+    'Aksa, kelas tiga A, sudah dijemput.', expect.objectContaining({ language: 'id-ID' })));
   expect(confirmPickup).toHaveBeenCalledWith('T1', undefined);
 });
 

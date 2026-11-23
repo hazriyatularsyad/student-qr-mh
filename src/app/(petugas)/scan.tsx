@@ -1,11 +1,11 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { ConfirmSheet } from '@/components/ConfirmSheet';
 import { checkPickup, confirmPickup } from '@/lib/pickup';
 import { createScanGate } from '@/lib/scanGate';
 import { buildAnnouncement } from '@/lib/speech';
-import { speechQueue } from '@/lib/tts';
+import { initVoices, speechQueue } from '@/lib/tts';
 import type { CheckResult, Substitute } from '@/lib/types';
 import { colors } from '@/theme';
 
@@ -13,6 +13,7 @@ export default function Scan() {
   const [permission, requestPermission] = useCameraPermissions();
   const gate = useRef(createScanGate()).current;
   const busyRef = useRef(false);
+  useEffect(() => { void initVoices(); }, []);
   const [token, setToken] = useState<string | null>(null);
   const [result, setResult] = useState<CheckResult | null>(null);
   const [confirming, setConfirming] = useState(false);

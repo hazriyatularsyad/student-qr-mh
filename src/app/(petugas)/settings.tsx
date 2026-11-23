@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '@/lib/auth';
-import { getSpeechOpts, setSpeechOpts, speechQueue } from '@/lib/tts';
+import { getSpeechOpts, getVoices, initVoices, setSpeechOpts, speechQueue } from '@/lib/tts';
 import { colors, radius } from '@/theme';
 
 const KEY = 'speech-opts';
@@ -12,18 +12,19 @@ export default function Settings() {
   const { signOut } = useAuth();
   const [rate, setRate] = useState(getSpeechOpts().rate);
   const [pitch, setPitch] = useState(getSpeechOpts().pitch);
+  const [voice, setVoice] = useState(getSpeechOpts().voice);
+  const [voiceCount, setVoiceCount] = useState(getVoices().length);
 
   useEffect(() => {
-    AsyncStorage.getItem(KEY).then((raw) => {
-      if (!raw) return;
-      const o = JSON.parse(raw) as { rate: number; pitch: number };
-      setSpeechOpts(o); setRate(o.rate); setPitch(o.pitch);
-    }).catch(() => {});
+    void initVoices().then(() => {
+      const o = getSpeechOpts();
+      setRate(o.rate); setPitch(o.pitch); setVoice(o.voice); setVoiceCount(getVoices().length);
+    });
   }, []);
 
   const update = (next: { rate: number; pitch: number }) => {
     setRate(next.rate); setPitch(next.pitch); setSpeechOpts(next);
-    AsyncStorage.setItem(KEY, JSON.stringify(next)).catch(() => {});
+    AsyncStorage.setItem(KEY, JSON.stringify({ ...next, voice })).catch(() => {});
   };
 
   const Stepper = ({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) => (
@@ -38,7 +39,20 @@ export default function Settings() {
     <View style={s.wrap}>
       <Stepper label="Kecepatan suara" value={rate} onChange={(v) => update({ rate: v, pitch })} />
       <Stepper label="Nada suara" value={pitch} onChange={(v) => update({ rate, pitch: v })} />
-      <Pressable style={s.btn} onPress={() => speechQueue.enqueue('Tes speaker. Aksa kelas 3 A sudah dijemput.')}>
+      <Text style={s.label}>
+        {voiceCount === 0 ? 'Suara Indonesia belum terpasang di HP ini. Pasang lewat Pengaturan HP > Text-to-speech.' : `Suara: ${getVoices().find((v) => v.identifier === voice)?.name ?? voice} (${voiceCount} tersedia)`}
+      </Text>
+      {voiceCount > 1 && (
+        <Pressable style={[s.btn, { backgroundColor: colors.muted }]} onPress={() => {
+          const list = getVoices();
+          const next = list[(list.findIndex((v) => v.identifier === voice) + 1) % list.length];
+          setSpeechOpts({ voice: next.identifier }); setVoice(next.identifier);
+          AsyncStorage.setItem(KEY, JSON.stringify({ rate, pitch, voice: next.identifier })).catch(() => {});
+        }}>
+          <Text style={s.btnText}>Ganti suara</Text>
+        </Pressable>
+      )}
+      <Pressable style={s.btn} onPress={() => speechQueue.enqueue('Tes speaker. Aksa, kelas tiga A, sudah dijemput.')}>
         <Text style={s.btnText}>Tes Speaker</Text>
       </Pressable>
       <Pressable style={[s.btn, { backgroundColor: colors.muted }]} onPress={() => void signOut()}>
