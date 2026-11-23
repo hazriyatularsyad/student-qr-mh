@@ -7,7 +7,7 @@ import { createScanGate } from '@/lib/scanGate';
 import { buildAnnouncement } from '@/lib/speech';
 import { initVoices, speechQueue } from '@/lib/tts';
 import type { CheckResult, Substitute } from '@/lib/types';
-import { colors } from '@/theme';
+import { colors, primaryButton } from '@/theme';
 
 export default function Scan() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -84,8 +84,8 @@ const styles = StyleSheet.create({
   fill: { flex: 1, backgroundColor: '#000' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16, padding: 24, backgroundColor: colors.bg },
   text: { fontSize: 18, color: colors.ink, textAlign: 'center' },
-  btn: { minHeight: 52, borderRadius: 14, backgroundColor: colors.accent, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' },
-  btnText: { color: '#fff', fontSize: 17, fontWeight: '700' },
-  repeat: { position: 'absolute', top: 16, right: 16, minHeight: 44, borderRadius: 22, backgroundColor: 'rgba(20,35,43,0.85)', paddingHorizontal: 16, alignItems: 'center', justifyContent: 'center' },
+  btn: { minHeight: 52, borderRadius: 14, ...primaryButton, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' },
+  btnText: { color: colors.ink, fontSize: 17, fontWeight: '700' },
+  repeat: { position: 'absolute', top: 16, right: 16, minHeight: 44, borderRadius: 22, backgroundColor: colors.sheet, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 16, alignItems: 'center', justifyContent: 'center' },
   sheetWrap: { position: 'absolute', left: 0, right: 0, bottom: 0 },
 });

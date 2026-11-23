@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import type { LogRow } from '@/lib/types';
-import { colors, radius } from '@/theme';
+import { colors, radius, glass } from '@/theme';
 
 const tone = { verified: colors.ok, duplicate: colors.warn, rejected: colors.danger } as const;
 const label = { verified: 'Terverifikasi', duplicate: 'Duplikat', rejected: 'Ditolak' } as const;
@@ -27,7 +27,7 @@ export function LogList({ rows }: { rows: LogRow[] }) {
 }
 
 const s = StyleSheet.create({
-  card: { backgroundColor: colors.surface, borderRadius: radius, borderLeftWidth: 6, padding: 14, marginBottom: 10, gap: 2 },
+  card: { ...glass, borderRadius: radius, borderLeftWidth: 6, padding: 14, marginBottom: 10, gap: 2 },
   name: { fontSize: 18, fontWeight: '700', color: colors.ink },
   meta: { fontSize: 15, color: colors.muted },
   sub: { fontSize: 16, fontWeight: '600', color: colors.warn },

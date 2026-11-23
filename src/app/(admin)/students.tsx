@@ -3,7 +3,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Btn, Field } from '@/components/form';
 import { listStudents, saveStudent, type Student } from '@/lib/admin';
-import { colors, radius } from '@/theme';
+import { colors, radius, glass } from '@/theme';
 
 export default function Students() {
   const router = useRouter();
@@ -53,7 +53,7 @@ const s = StyleSheet.create({
   wrap: { flex: 1, padding: 16, gap: 10, backgroundColor: colors.bg },
   form: { gap: 8 },
   msg: { color: colors.accent, fontSize: 15 },
-  row: { backgroundColor: colors.surface, borderRadius: radius, padding: 14, marginBottom: 8 },
+  row: { ...glass, borderRadius: radius, padding: 14, marginBottom: 8 },
   name: { fontSize: 17, fontWeight: '700', color: colors.ink },
   meta: { fontSize: 14, color: colors.muted },
 });

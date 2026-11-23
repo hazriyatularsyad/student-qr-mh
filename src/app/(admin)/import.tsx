@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import { Btn } from '@/components/form';
 import { runImport, type ImportOutcome } from '@/lib/importFlow';
-import { colors } from '@/theme';
+import { colors, fonts } from '@/theme';
 
 export default function Import() {
   const [busy, setBusy] = useState(false);
@@ -42,7 +42,7 @@ export default function Import() {
 
 const s = StyleSheet.create({
   wrap: { padding: 16, gap: 12, backgroundColor: colors.bg },
-  title: { fontSize: 22, fontWeight: '800', color: colors.ink },
+  title: { fontSize: 24, fontWeight: '700', color: colors.ink, fontFamily: fonts.display },
   hint: { fontSize: 15, color: colors.muted },
   ok: { fontSize: 16, color: colors.ok },
   err: { fontSize: 16, color: colors.danger },

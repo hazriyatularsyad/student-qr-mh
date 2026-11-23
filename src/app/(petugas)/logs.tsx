@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { LogList } from '@/components/LogList';
 import { listLogs } from '@/lib/logs';
 import type { LogRow } from '@/lib/types';
-import { colors, radius } from '@/theme';
+import { colors, radius, glass } from '@/theme';
 
 const STATUSES = [
   { label: 'Semua', value: undefined },
@@ -54,9 +54,9 @@ export default function Logs() {
 
 const s = StyleSheet.create({
   wrap: { flex: 1, padding: 16, gap: 10, backgroundColor: colors.bg },
-  input: { minHeight: 48, backgroundColor: colors.surface, borderRadius: radius, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 14, fontSize: 16 },
+  input: { minHeight: 48, ...glass, borderRadius: radius, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 14, fontSize: 16 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { minHeight: 40, paddingHorizontal: 14, borderRadius: 20, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
+  chip: { minHeight: 40, paddingHorizontal: 14, borderRadius: 20, ...glass, borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
   chipText: { fontSize: 15, color: colors.ink },
   error: { color: colors.danger, fontSize: 15 },
 });

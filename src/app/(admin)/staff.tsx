@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Btn, Field } from '@/components/form';
 import { createStaff, listStaff, setStaffActive, type StaffRow } from '@/lib/admin';
-import { colors, radius } from '@/theme';
+import { colors, radius, glass } from '@/theme';
 
 export default function Staff() {
   const [rows, setRows] = useState<StaffRow[]>([]);
@@ -51,10 +51,10 @@ export default function Staff() {
 const s = StyleSheet.create({
   wrap: { flex: 1, padding: 16, gap: 8, backgroundColor: colors.bg },
   chips: { flexDirection: 'row', gap: 8 },
-  chip: { minHeight: 40, paddingHorizontal: 16, borderRadius: 20, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
+  chip: { minHeight: 40, paddingHorizontal: 16, borderRadius: 20, ...glass, borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
   chipText: { fontSize: 15, color: colors.ink },
   msg: { color: colors.accent, fontSize: 15 },
-  row: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.surface, borderRadius: radius, padding: 14, marginBottom: 8 },
+  row: { flexDirection: 'row', alignItems: 'center', ...glass, borderRadius: radius, padding: 14, marginBottom: 8 },
   name: { fontSize: 17, fontWeight: '700', color: colors.ink },
   meta: { fontSize: 14, color: colors.muted },
   link: { color: colors.accent, fontSize: 15, fontWeight: '700' },

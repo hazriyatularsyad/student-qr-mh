@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '@/lib/auth';
 import { getSpeechOpts, getVoices, initVoices, setSpeechOpts, speechQueue } from '@/lib/tts';
-import { colors, radius } from '@/theme';
+import { colors, radius, glass, primaryButton } from '@/theme';
 
 const KEY = 'speech-opts';
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, Math.round(v * 100) / 100));
@@ -43,7 +43,7 @@ export default function Settings() {
         {voiceCount === 0 ? 'Suara Indonesia belum terpasang di HP ini. Pasang lewat Pengaturan HP > Text-to-speech.' : `Suara: ${getVoices().find((v) => v.identifier === voice)?.name ?? voice} (${voiceCount} tersedia)`}
       </Text>
       {voiceCount > 1 && (
-        <Pressable style={[s.btn, { backgroundColor: colors.muted }]} onPress={() => {
+        <Pressable style={s.btn} onPress={() => {
           const list = getVoices();
           const next = list[(list.findIndex((v) => v.identifier === voice) + 1) % list.length];
           setSpeechOpts({ voice: next.identifier }); setVoice(next.identifier);
@@ -55,7 +55,7 @@ export default function Settings() {
       <Pressable style={s.btn} onPress={() => speechQueue.enqueue('Tes speaker. Aksa, kelas tiga A, sudah dijemput.')}>
         <Text style={s.btnText}>Tes Speaker</Text>
       </Pressable>
-      <Pressable style={[s.btn, { backgroundColor: colors.muted }]} onPress={() => void signOut()}>
+      <Pressable style={s.btn} onPress={() => void signOut()}>
         <Text style={s.btnText}>Keluar</Text>
       </Pressable>
     </View>
@@ -66,8 +66,8 @@ const s = StyleSheet.create({
   wrap: { flex: 1, padding: 20, gap: 16, backgroundColor: colors.bg },
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   label: { flex: 1, fontSize: 17, color: colors.ink },
-  step: { width: 52, height: 52, borderRadius: radius, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.line },
+  step: { width: 52, height: 52, borderRadius: radius, ...glass, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.line },
   stepText: { fontSize: 24, color: colors.ink },
-  btn: { minHeight: 56, borderRadius: radius, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' },
-  btnText: { color: '#fff', fontSize: 18, fontWeight: '700' },
+  btn: { minHeight: 56, borderRadius: radius, ...primaryButton, alignItems: 'center', justifyContent: 'center' },
+  btnText: { color: colors.ink, fontSize: 18, fontWeight: '700' },
 });

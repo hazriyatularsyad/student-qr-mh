@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { usePhotoUrl } from '@/lib/photo';
 import type { CheckResult, Substitute } from '@/lib/types';
-import { colors, radius } from '@/theme';
+import { colors, radius, glass, primaryButton, fonts } from '@/theme';
 
 type Props = {
   result: CheckResult;
@@ -45,8 +45,8 @@ export function ConfirmSheet({ result, busy, error, onConfirm, onClose }: Props)
 
       {result.status === 'ready' && !other && (
         <>
-          <Pressable style={[styles.btn, { backgroundColor: colors.ok }]} disabled={busy} onPress={() => onConfirm(undefined)}>
-            <Text style={styles.btnText}>Konfirmasi</Text>
+          <Pressable style={[styles.btn, primaryButton]} disabled={busy} onPress={() => onConfirm(undefined)}>
+            <Text style={[styles.btnText, { color: colors.ink }]}>Konfirmasi</Text>
           </Pressable>
           <Pressable style={[styles.btn, styles.ghost]} disabled={busy} onPress={() => setOther(true)}>
             <Text style={[styles.btnText, { color: colors.ink }]}>Dijemput orang lain</Text>
@@ -59,11 +59,11 @@ export function ConfirmSheet({ result, busy, error, onConfirm, onClose }: Props)
           <TextInput style={styles.input} placeholder="Nama penjemput" value={name} onChangeText={setName} />
           <TextInput style={styles.input} placeholder="Status (mis. paman, ojek langganan)" value={status} onChangeText={setStatus} />
           <Pressable
-            style={[styles.btn, { backgroundColor: colors.ok }]}
+            style={[styles.btn, primaryButton]}
             disabled={busy}
             onPress={() => { if (name.trim() && status.trim()) onConfirm({ name: name.trim(), status: status.trim() }); }}
           >
-            <Text style={styles.btnText}>Konfirmasi penjemput pengganti</Text>
+            <Text style={[styles.btnText, { color: colors.ink }]}>Konfirmasi penjemput pengganti</Text>
           </Pressable>
         </>
       )}
@@ -74,16 +74,16 @@ export function ConfirmSheet({ result, busy, error, onConfirm, onClose }: Props)
 }
 
 const styles = StyleSheet.create({
-  sheet: { backgroundColor: colors.surface, borderTopWidth: 6, padding: 20, gap: 12, borderTopLeftRadius: radius, borderTopRightRadius: radius },
+  sheet: { ...glass, backgroundColor: colors.sheet, borderTopWidth: 6, padding: 20, gap: 12, borderTopLeftRadius: radius, borderTopRightRadius: radius },
   row: { flexDirection: 'row', gap: 14, alignItems: 'center' },
   photo: { width: 72, height: 72, borderRadius: radius },
   noPhoto: { backgroundColor: colors.line },
-  name: { fontSize: 24, fontWeight: '700', color: colors.ink },
+  name: { fontSize: 26, fontWeight: '700', color: colors.ink, fontFamily: fonts.display },
   meta: { fontSize: 16, color: colors.muted },
   guardian: { fontSize: 18, color: colors.ink },
   warning: { fontSize: 18, fontWeight: '600' },
   btn: { minHeight: 56, borderRadius: radius, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 },
-  ghost: { backgroundColor: colors.bg },
+  ghost: { backgroundColor: 'rgba(255,255,255,0.45)', borderWidth: 1, borderColor: colors.line },
   btnText: { color: '#fff', fontSize: 18, fontWeight: '700' },
   input: { minHeight: 52, borderWidth: 1, borderColor: colors.line, borderRadius: radius, paddingHorizontal: 14, fontSize: 17 },
   close: { alignItems: 'center', padding: 8 },
