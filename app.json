@@ -36,7 +36,19 @@
         }
       ],
       "expo-secure-store",
-      "expo-sharing"
+      "expo-sharing",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Kamera dipakai untuk memindai QR code penjemputan."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Pilih foto murid dari galeri."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

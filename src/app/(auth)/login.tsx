@@ -14,9 +14,10 @@ export default function Login() {
 
   const submit = async () => {
     setBusy(true);
-    setError(await signIn(email.trim(), password));
+    const err = await signIn(email.trim(), password);
+    setError(err);
     setBusy(false);
-    router.replace('/');
+    if (!err) router.replace('/');
   };
 
   return (
