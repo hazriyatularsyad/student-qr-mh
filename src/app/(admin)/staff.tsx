@@ -32,8 +32,8 @@ export default function Staff() {
           <Field placeholder="Kata sandi, min. 8 karakter" secureTextEntry value={f.password} onChangeText={(v) => setF({ ...f, password: v })} />
           <View style={s.chips}>
             {(['petugas', 'admin'] as const).map((r) => (
-              <Pressable key={r} onPress={() => setRole(r)} style={[s.chip, role === r && { backgroundColor: colors.navy }]}>
-                <Text style={[s.chipText, role === r && { color: '#FFFFFF' }]}>{r}</Text>
+              <Pressable key={r} onPress={() => setRole(r)} style={[s.chip, role === r && { backgroundColor: colors.gold }]}>
+                <Text style={[s.chipText, role === r && { color: colors.onBright }]}>{r}</Text>
               </Pressable>
             ))}
           </View>

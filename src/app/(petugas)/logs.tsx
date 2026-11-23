@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { BentoGrid, Tile, TileLabel, TileValue } from '@/components/Bento';
+import { BentoGrid, IconBadge, Tile, TileLabel, TileValue } from '@/components/Bento';
 import { LogList } from '@/components/LogList';
 import { Field, Panel } from '@/components/form';
 import { listLogs } from '@/lib/logs';
@@ -45,21 +45,33 @@ export default function Logs() {
   return (
     <ScrollView contentContainerStyle={s.wrap}>
       <BentoGrid>
-        <Tile tone="forest" span={2}>
-          <TileLabel tone="forest">Dijemput hari ini</TileLabel>
-          <TileValue tone="forest" size={48}>{sum.verified}</TileValue>
+        <Tile tone="gold" shape="folder" style={s.folder}>
+          <IconBadge name="checkmark-done" size={40} />
+          <View>
+            <TileValue tone="gold" size={34}>{sum.verified}</TileValue>
+            <TileLabel tone="gold">Dijemput hari ini</TileLabel>
+          </View>
         </Tile>
-        <Tile tone="coral">
-          <TileLabel tone="coral">Scan ganda</TileLabel>
-          <TileValue tone="coral">{sum.duplicate}</TileValue>
+        <Tile tone="coral" shape="folder" style={s.folder}>
+          <IconBadge name="copy" size={40} />
+          <View>
+            <TileValue tone="coral" size={34}>{sum.duplicate}</TileValue>
+            <TileLabel tone="coral">Scan ganda</TileLabel>
+          </View>
         </Tile>
-        <Tile tone="plum">
-          <TileLabel tone="plum">QR ditolak</TileLabel>
-          <TileValue tone="plum">{sum.rejected}</TileValue>
+        <Tile tone="plum" shape="folder" style={s.folder}>
+          <IconBadge name="close-circle" size={40} />
+          <View>
+            <TileValue tone="plum" size={34}>{sum.rejected}</TileValue>
+            <TileLabel tone="plum">QR ditolak</TileLabel>
+          </View>
         </Tile>
-        <Tile tone="indigo" span={2}>
-          <TileLabel tone="indigo">Terakhir dijemput</TileLabel>
-          <Text style={s.last}>{sum.last ? `${sum.last.student_name}, kelas ${sum.last.class_name}` : 'Belum ada'}</Text>
+        <Tile tone="teal" shape="folder" style={s.folder}>
+          <IconBadge name="time" size={40} />
+          <View>
+            <Text style={s.last} numberOfLines={2}>{sum.last ? sum.last.student_name?.split(' ')[0] : 'Belum ada'}</Text>
+            <TileLabel tone="teal">{sum.last ? `Terakhir, kelas ${sum.last.class_name}` : 'Terakhir dijemput'}</TileLabel>
+          </View>
         </Tile>
       </BentoGrid>
       <Panel>
@@ -68,8 +80,8 @@ export default function Logs() {
         <View style={s.chips}>
           {STATUSES.map((st) => (
             <Pressable key={st.label} onPress={() => setStatus(st.value)}
-              style={[s.chip, status === st.value && { backgroundColor: colors.navy }]}>
-              <Text style={[s.chipText, status === st.value && { color: '#FFFFFF' }]}>{st.label}</Text>
+              style={[s.chip, status === st.value && { backgroundColor: colors.gold }]}>
+              <Text style={[s.chipText, status === st.value && { color: colors.onBright }]}>{st.label}</Text>
             </Pressable>
           ))}
         </View>
@@ -83,8 +95,9 @@ export default function Logs() {
 const s = StyleSheet.create({
   wrap: { flex: 1, padding: 16, gap: 12 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { minHeight: 44, paddingHorizontal: 16, borderRadius: radius, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
+  chip: { minHeight: 44, paddingHorizontal: 16, borderRadius: radius, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
   chipText: { fontSize: 15, fontWeight: '700', color: colors.ink },
-  last: { color: '#fff', fontSize: 20, fontWeight: '800' },
+  last: { color: colors.onBright, fontSize: 24, fontWeight: '800', letterSpacing: -0.5 },
+  folder: { minHeight: 150, justifyContent: 'space-between' },
   error: { color: colors.danger, fontSize: 15 },
 });

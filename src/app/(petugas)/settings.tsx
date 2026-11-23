@@ -81,9 +81,9 @@ const s = StyleSheet.create({
   wrap: { padding: 12 },
   steps: { flexDirection: 'row', gap: 8 },
   step: { flex: 1, minHeight: 48, borderRadius: 14, backgroundColor: colors.cream, alignItems: 'center', justifyContent: 'center' },
-  voice: { color: '#fff', fontSize: 18, fontWeight: '700' },
+  voice: { color: colors.onBright, fontSize: 18, fontWeight: '700' },
   cream: { minHeight: 48, borderRadius: 14, backgroundColor: colors.cream, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center' },
   creamText: { fontSize: 16, fontWeight: '800', color: colors.ink },
   testRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  testText: { fontSize: 22, fontWeight: '800', color: colors.ink },
+  testText: { fontSize: 22, fontWeight: '800', color: colors.onBright },
 });

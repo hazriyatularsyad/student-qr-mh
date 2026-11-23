@@ -1,57 +1,52 @@
 import { Platform, type ViewStyle } from 'react-native';
 
-// Corporate palette: navy brand, white surfaces, cool grey canvas, pearl-gold accent.
+// Dark canvas with bright, saturated folder tiles. Bright tiles always carry black text.
 export const colors = {
-  bg: '#F4F6FA',
-  surface: '#FFFFFF',
-  sheet: '#FFFFFF',
-  cream: '#EEF2F9', // light neutral tint (steppers, pills)
-  gold: '#C9962B',
-  goldDeep: '#9A6B00',
-  navy: '#14274E',
-  ink: '#0F172A',
-  muted: '#5B6B82',
-  accent: '#2563EB',
-  ok: '#12794A',
-  warn: '#B26A00',
-  danger: '#C93550',
-  line: '#D8DFEA',
+  bg: '#0A0A0B',
+  surface: '#17171B',
+  sheet: '#17171B',
+  cream: '#26262C', // raised neutral (steppers, pills)
+  gold: '#D8F264', // lime accent
+  goldDeep: '#D8F264',
+  navy: '#17171B',
+  ink: '#FFFFFF', // primary text on dark
+  muted: '#9BA1AB',
+  accent: '#D8F264',
+  onBright: '#0A0A0B', // text on bright tiles / buttons
+  ok: '#8CF25C',
+  warn: '#FF7B5C',
+  danger: '#FF5E7E',
+  line: '#2E2E35',
 };
-export const radius = 14;
+export const radius = 16;
 
-// System sans only: weight and size carry the hierarchy.
 export const fonts = {
   display: Platform.select({ ios: 'System', android: 'sans-serif-medium', default: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif' }),
 };
-export const hairline = '#E3E8F0';
+export const hairline = '#26262C';
 
-// Card surface: white, thin border, soft layered shadow.
+// Dark card surface.
 export const glass: ViewStyle = {
   backgroundColor: colors.surface,
   borderWidth: 1,
   borderColor: hairline,
-  shadowColor: '#0F172A',
-  shadowOpacity: 0.06,
-  shadowRadius: 10,
-  shadowOffset: { width: 0, height: 3 },
-  elevation: 2,
 };
 
-// Primary action: solid navy, white text.
+// Primary action: lime fill, black text.
 export const primaryButton: ViewStyle = {
-  backgroundColor: colors.navy,
+  backgroundColor: colors.gold,
 };
 
-// Tile tones. Meaning: emerald = done, rose = duplicate, violet = rejected.
+// Tile tones. Meaning: lime = picked up, green = active students, coral = duplicate, pink = rejected, teal = info.
 export const tones = {
-  glass: { bg: colors.surface, fg: colors.ink, sub: colors.muted },
-  gold: { bg: '#F2B53A', fg: '#2B1D00', sub: '#5C4300' },
-  teal: { bg: '#0B7A7C', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.86)' },
-  indigo: { bg: '#2C4DB5', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.86)' },
-  coral: { bg: '#C93550', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.88)' },
-  plum: { bg: '#6B46C1', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.86)' },
-  forest: { bg: '#12794A', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.86)' },
-  navy: { bg: '#14274E', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.8)' },
+  glass: { bg: colors.surface, fg: '#FFFFFF', sub: '#9BA1AB' },
+  gold: { bg: '#D8F264', fg: '#0A0A0B', sub: 'rgba(10,10,11,0.68)' },
+  forest: { bg: '#8CF25C', fg: '#0A0A0B', sub: 'rgba(10,10,11,0.68)' },
+  coral: { bg: '#FF7B5C', fg: '#0A0A0B', sub: 'rgba(10,10,11,0.7)' },
+  plum: { bg: '#FF5E7E', fg: '#0A0A0B', sub: 'rgba(10,10,11,0.7)' },
+  teal: { bg: '#33C9B8', fg: '#0A0A0B', sub: 'rgba(10,10,11,0.68)' },
+  indigo: { bg: '#33C9B8', fg: '#0A0A0B', sub: 'rgba(10,10,11,0.68)' },
+  navy: { bg: '#17171B', fg: '#FFFFFF', sub: '#9BA1AB' },
 } as const;
 export type Tone = keyof typeof tones;
-export const avatarTones: Tone[] = ['teal', 'indigo', 'coral', 'plum', 'forest'];
+export const avatarTones: Tone[] = ['teal', 'gold', 'coral', 'plum', 'forest'];

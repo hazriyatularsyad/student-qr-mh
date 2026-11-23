@@ -64,7 +64,7 @@ export function ConfirmSheet({ result, busy, error, onConfirm, onClose }: Props)
         {result.status === 'ready' && result.guardian && (
           <Tile tone="indigo" span={2}>
             <View style={styles.row}>
-              <Icon name="people" size={22} color="#fff" />
+              <Icon name="people" size={22} color={colors.onBright} />
               <Text style={styles.guardian}>Wali terdaftar: {result.guardian.full_name} ({result.guardian.relationship})</Text>
             </View>
           </Tile>
@@ -74,7 +74,7 @@ export function ConfirmSheet({ result, busy, error, onConfirm, onClose }: Props)
           <>
             <Tile tone="forest" span={2} onPress={() => !busy && onConfirm(undefined)} label="Konfirmasi" style={styles.action}>
               <View style={styles.row}>
-                <Icon name="checkmark" size={26} color="#fff" />
+                <Icon name="checkmark" size={26} color={colors.onBright} />
                 <Text style={styles.actionText}>Konfirmasi</Text>
               </View>
             </Tile>
@@ -97,7 +97,7 @@ export function ConfirmSheet({ result, busy, error, onConfirm, onClose }: Props)
               disabled={busy}
               onPress={() => { if (name.trim() && status.trim()) onConfirm({ name: name.trim(), status: status.trim() }); }}
             >
-              <Icon name="checkmark" size={22} color="#fff" />
+              <Icon name="checkmark" size={22} color={colors.onBright} />
               <Text style={styles.actionText}>Konfirmasi penjemput pengganti</Text>
             </Pressable>
           </Tile>
@@ -117,13 +117,13 @@ const styles = StyleSheet.create({
   banner: { fontSize: 20, fontWeight: '800' },
   body: { fontSize: 16, lineHeight: 22 },
   photo: { width: 76, height: 76, borderRadius: radius },
-  noPhoto: { backgroundColor: 'rgba(46,34,8,0.1)', alignItems: 'center', justifyContent: 'center' },
+  noPhoto: { backgroundColor: colors.cream, alignItems: 'center', justifyContent: 'center' },
   name: { fontSize: 26, fontWeight: '800', letterSpacing: -0.5, color: colors.ink },
-  cls: { fontSize: 18, fontWeight: '700', color: colors.goldDeep },
-  guardian: { flex: 1, fontSize: 17, fontWeight: '700', color: '#fff' },
+  cls: { fontSize: 18, fontWeight: '700', color: colors.gold },
+  guardian: { flex: 1, fontSize: 17, fontWeight: '700', color: colors.onBright },
   action: { minHeight: 68, justifyContent: 'center' },
-  actionText: { fontSize: 19, fontWeight: '800', color: '#fff' },
-  input: { minHeight: 52, backgroundColor: 'rgba(255,255,255,0.6)', borderRadius: radius, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 14, fontSize: 16, color: colors.ink },
+  actionText: { fontSize: 19, fontWeight: '800', color: colors.onBright },
+  input: { minHeight: 52, backgroundColor: colors.cream, borderRadius: radius, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 14, fontSize: 16, color: colors.ink },
   submit: { minHeight: 56, borderRadius: radius, backgroundColor: tones.forest.bg, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12 },
   closeTile: { minHeight: 52, justifyContent: 'center', alignItems: 'center' },
   closeText: { fontSize: 16, fontWeight: '800', color: colors.muted },

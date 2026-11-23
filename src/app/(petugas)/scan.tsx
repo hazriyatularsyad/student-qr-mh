@@ -58,7 +58,7 @@ export default function Scan() {
   if (!permission?.granted) {
     return (
       <View style={styles.center}>
-        <Icon name="camera-outline" size={44} color={colors.goldDeep} />
+        <Icon name="camera-outline" size={44} color={colors.gold} />
         <Text style={styles.text}>Aplikasi butuh izin kamera untuk memindai QR.</Text>
         <Pressable style={styles.btn} onPress={() => void requestPermission()}><Text style={styles.btnText}>Izinkan kamera</Text></Pressable>
       </View>
@@ -89,11 +89,11 @@ export default function Scan() {
           </View>
           <BentoGrid>
             <Tile tone="indigo" span={2} style={styles.hintTile}>
-              <Icon name="scan-outline" size={22} color="#fff" />
+              <Icon name="scan-outline" size={22} color={colors.onBright} />
               <Text style={styles.hint}>Arahkan kamera ke QR kartu wali</Text>
             </Tile>
             <Tile tone="gold" onPress={() => speechQueue.repeatLast()} label="Ulangi Suara">
-              <Icon name="volume-high-outline" size={24} color={colors.ink} />
+              <Icon name="volume-high-outline" size={24} color={colors.onBright} />
               <Text style={styles.tileText}>Ulangi Suara</Text>
             </Tile>
             <Tile tone="teal">
@@ -112,13 +112,13 @@ const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16, padding: 24 },
   text: { fontSize: 18, color: colors.ink, textAlign: 'center' },
   btn: { minHeight: 52, borderRadius: 14, ...primaryButton, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' },
-  btnText: { color: '#FFFFFF', fontSize: 17, fontWeight: '700' },
+  btnText: { color: colors.onBright, fontSize: 17, fontWeight: '700' },
   cameraTile: { flex: 1, minHeight: 240, borderRadius: 28, overflow: 'hidden', backgroundColor: '#1B1405' },
   frameWrap: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' },
   frame: { width: 220, height: 220 },
-  corner: { position: 'absolute', width: 44, height: 44, borderColor: colors.cream, borderRadius: 6 },
+  corner: { position: 'absolute', width: 44, height: 44, borderColor: colors.gold, borderRadius: 6 },
   hintTile: { minHeight: 64, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' },
-  hint: { flex: 1, color: '#fff', fontSize: 16, fontWeight: '700' },
-  tileText: { color: colors.ink, fontSize: 16, fontWeight: '800' },
-  lastText: { color: '#fff', fontSize: 17, fontWeight: '800' },
+  hint: { flex: 1, color: colors.onBright, fontSize: 16, fontWeight: '700' },
+  tileText: { color: colors.onBright, fontSize: 16, fontWeight: '800' },
+  lastText: { color: colors.onBright, fontSize: 17, fontWeight: '800' },
 });
