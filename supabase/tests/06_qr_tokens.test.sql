@@ -1,5 +1,6 @@
 begin;
 delete from public.pickup_logs;
+delete from public.guardian_qr_tokens; -- hermetic: rolled back at the end
 select plan(8);
 
 insert into auth.users (id, instance_id, aud, role, email) values
