@@ -1,6 +1,7 @@
 import { createElement } from 'react';
 import type { ColorValue } from 'react-native';
 import { Icon, type IconName } from '@/components/Icon';
+import { HeaderGlow, IslandTitle } from '@/components/IslandTitle';
 import { LogoutButton } from '@/components/LogoutButton';
 import { colors } from '@/theme';
 
@@ -8,10 +9,10 @@ export const tabScreenOptions = {
   sceneStyle: { backgroundColor: colors.bg, width: '100%' as const, maxWidth: 1040, alignSelf: 'center' as const },
   headerShown: true,
   headerShadowVisible: false,
-  headerTitleAlign: 'left' as const,
-  // navy bar with a thin pearl-gold rule underneath
+  headerTitleAlign: 'center' as const,
+  headerTitle: ({ children }: { children: string }) => createElement(IslandTitle, { title: String(children) }),
+  headerBackground: () => createElement(HeaderGlow),
   headerStyle: { backgroundColor: colors.bg, height: 64 },
-  headerTitleStyle: { fontSize: 20, fontWeight: '800' as const, letterSpacing: -0.2, color: '#FFFFFF' },
   headerRight: () => createElement(LogoutButton),
   tabBarStyle: {
     backgroundColor: '#111114',
@@ -33,10 +34,11 @@ export const tabIcon = (base: string) => ({ focused, color }: { focused: boolean
 // Same header as the tabs, plus a lime back arrow for pushed screens.
 export const stackScreenOptions = {
   headerShadowVisible: false,
-  headerTitleAlign: 'left' as const,
-  headerStyle: { backgroundColor: colors.bg },
+  headerTitleAlign: 'center' as const,
+  headerTitle: ({ children }: { children: string }) => createElement(IslandTitle, { title: String(children) }),
+  headerBackground: () => createElement(HeaderGlow),
+  headerStyle: { backgroundColor: colors.bg, height: 64 },
   headerTintColor: colors.gold,
-  headerTitleStyle: { fontSize: 20, fontWeight: '800' as const, letterSpacing: -0.2, color: '#FFFFFF' },
   headerRight: () => createElement(LogoutButton),
   contentStyle: { backgroundColor: colors.bg },
 };
