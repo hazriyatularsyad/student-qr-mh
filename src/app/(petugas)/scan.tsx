@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import { BentoGrid, Tile, TileLabel } from '@/components/Bento';
 import { Icon } from '@/components/Icon';
 import { ConfirmSheet } from '@/components/ConfirmSheet';
 import { checkPickup, confirmPickup } from '@/lib/pickup';
@@ -19,6 +20,7 @@ export default function Scan() {
   const [result, setResult] = useState<CheckResult | null>(null);
   const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [last, setLast] = useState<string | null>(null);
 
   const close = () => { setResult(null); setToken(null); setError(null); busyRef.current = false; };
 
@@ -41,6 +43,7 @@ export default function Scan() {
       const r = await confirmPickup(token, substitute);
       if (r.status === 'verified' && r.student) {
         speechQueue.enqueue(buildAnnouncement(r.student));
+        setLast(`${r.student.nickname?.trim() || r.student.full_name}, ${r.student.class_name}`);
         close();
       } else {
         setResult({ ...r, status: r.status === 'duplicate' ? 'duplicate' : 'rejected' });
@@ -64,47 +67,58 @@ export default function Scan() {
 
   return (
     <View style={styles.fill}>
-      <CameraView
-        style={StyleSheet.absoluteFill}
-        facing="back"
-        barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
-        onBarcodeScanned={result ? undefined : ({ data }) => { if (data) void onCode(data); }}
-      />
-      {!result && (
-        <View pointerEvents="none" style={styles.frameWrap}>
-          <View style={styles.frame}>
-            <View style={[styles.corner, { top: 0, left: 0, borderTopWidth: 5, borderLeftWidth: 5 }]} />
-            <View style={[styles.corner, { top: 0, right: 0, borderTopWidth: 5, borderRightWidth: 5 }]} />
-            <View style={[styles.corner, { bottom: 0, left: 0, borderBottomWidth: 5, borderLeftWidth: 5 }]} />
-            <View style={[styles.corner, { bottom: 0, right: 0, borderBottomWidth: 5, borderRightWidth: 5 }]} />
+      {result ? (
+        <ConfirmSheet result={result} busy={confirming} error={error} onConfirm={confirm} onClose={close} />
+      ) : (
+        <>
+          <View style={styles.cameraTile}>
+            <CameraView
+              style={StyleSheet.absoluteFill}
+              facing="back"
+              barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
+              onBarcodeScanned={({ data }) => { if (data) void onCode(data); }}
+            />
+            <View pointerEvents="none" style={styles.frameWrap}>
+              <View style={styles.frame}>
+                <View style={[styles.corner, { top: 0, left: 0, borderTopWidth: 5, borderLeftWidth: 5 }]} />
+                <View style={[styles.corner, { top: 0, right: 0, borderTopWidth: 5, borderRightWidth: 5 }]} />
+                <View style={[styles.corner, { bottom: 0, left: 0, borderBottomWidth: 5, borderLeftWidth: 5 }]} />
+                <View style={[styles.corner, { bottom: 0, right: 0, borderBottomWidth: 5, borderRightWidth: 5 }]} />
+              </View>
+            </View>
           </View>
-          <Text style={styles.hint}>Arahkan kamera ke QR kartu wali</Text>
-        </View>
-      )}
-      <Pressable accessibilityRole="button" accessibilityLabel="Ulangi Suara" style={styles.repeat} onPress={() => speechQueue.repeatLast()}>
-        <Icon name="volume-high-outline" size={20} color={colors.ink} />
-        <Text style={styles.repeatText}>Ulangi Suara</Text>
-      </Pressable>
-      {result && (
-        <View style={styles.sheetWrap}>
-          <ConfirmSheet result={result} busy={confirming} error={error} onConfirm={confirm} onClose={close} />
-        </View>
+          <BentoGrid>
+            <Tile tone="indigo" span={2} style={styles.hintTile}>
+              <Icon name="scan-outline" size={22} color="#fff" />
+              <Text style={styles.hint}>Arahkan kamera ke QR kartu wali</Text>
+            </Tile>
+            <Tile tone="gold" onPress={() => speechQueue.repeatLast()} label="Ulangi Suara">
+              <Icon name="volume-high-outline" size={24} color={colors.ink} />
+              <Text style={styles.tileText}>Ulangi Suara</Text>
+            </Tile>
+            <Tile tone="teal">
+              <TileLabel tone="teal">Terakhir dijemput</TileLabel>
+              <Text style={styles.lastText} numberOfLines={2}>{last ?? 'Belum ada'}</Text>
+            </Tile>
+          </BentoGrid>
+        </>
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  fill: { flex: 1, backgroundColor: '#000' },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16, padding: 24, backgroundColor: colors.bg },
+  fill: { flex: 1, padding: 12, gap: 8 },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16, padding: 24 },
   text: { fontSize: 18, color: colors.ink, textAlign: 'center' },
   btn: { minHeight: 52, borderRadius: 14, ...primaryButton, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' },
   btnText: { color: colors.ink, fontSize: 17, fontWeight: '700' },
-  frameWrap: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center', gap: 18 },
-  frame: { width: 240, height: 240 },
+  cameraTile: { flex: 1, minHeight: 240, borderRadius: 28, overflow: 'hidden', backgroundColor: '#1B1405' },
+  frameWrap: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' },
+  frame: { width: 220, height: 220 },
   corner: { position: 'absolute', width: 44, height: 44, borderColor: colors.cream, borderRadius: 6 },
-  hint: { color: colors.cream, fontSize: 16, fontWeight: '700', textShadowColor: 'rgba(0,0,0,0.6)', textShadowRadius: 6 },
-  repeatText: { color: colors.ink, fontSize: 15, fontWeight: '800' },
-  repeat: { position: 'absolute', top: 16, right: 16, minHeight: 44, flexDirection: 'row', gap: 6, borderRadius: 22, backgroundColor: colors.sheet, borderWidth: 1, borderColor: colors.line, paddingHorizontal: 16, alignItems: 'center', justifyContent: 'center' },
-  sheetWrap: { position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center' },
+  hintTile: { minHeight: 64, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' },
+  hint: { flex: 1, color: '#fff', fontSize: 16, fontWeight: '700' },
+  tileText: { color: colors.ink, fontSize: 16, fontWeight: '800' },
+  lastText: { color: '#fff', fontSize: 17, fontWeight: '800' },
 });

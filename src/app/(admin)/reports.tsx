@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import { Field, Panel } from '@/components/form';
 import { LogList } from '@/components/LogList';
 import { listLogs } from '@/lib/logs';
@@ -24,7 +24,7 @@ export default function Reports() {
   useEffect(() => { void load(); }, [load]);
 
   return (
-    <View style={s.wrap}>
+    <ScrollView contentContainerStyle={s.wrap}>
       <Panel>
       <Field icon="calendar-outline" placeholder="Tanggal (YYYY-MM-DD, kosong = semua)" value={date} onChangeText={setDate} />
       <Field placeholder="Kelas" value={cls} onChangeText={setCls} autoCapitalize="characters" />
@@ -32,8 +32,8 @@ export default function Reports() {
       <Field icon="search-outline" placeholder="Cari nama atau NIS" value={q} onChangeText={setQ} />
       </Panel>
       {err && <Text style={s.err}>{err}</Text>}
-      <LogList rows={rows} />
-    </View>
+      <LogList rows={rows} inline />
+    </ScrollView>
   );
 }
 

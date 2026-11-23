@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Avatar } from '@/components/Bento';
 import { Btn, Field, Panel, Separator } from '@/components/form';
 import { createStaff, listStaff, setStaffActive, type StaffRow } from '@/lib/admin';
 import { useWide } from '@/lib/layout';
@@ -45,7 +46,8 @@ export default function Staff() {
           ItemSeparatorComponent={Separator}
           renderItem={({ item }) => (
             <View style={s.row}>
-              <View style={{ flex: 1 }}>
+              <Avatar name={item.full_name} seed={item.id} />
+              <View style={{ flex: 1, marginLeft: 12 }}>
                 <Text style={s.name}>{item.full_name}</Text>
                 <Text style={s.meta}>{item.role}{item.is_active ? '' : ', nonaktif'}</Text>
               </View>

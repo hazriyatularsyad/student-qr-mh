@@ -80,3 +80,13 @@ export async function createStaff(b: { email: string; password: string; full_nam
   const { error } = await supabase.functions.invoke('create-staff', { body: b });
   if (error) throw error;
 }
+
+export async function getCounts(): Promise<{ students: number; staff: number }> {
+  const [a, b] = await Promise.all([
+    supabase.from('students').select('nis', { count: 'exact', head: true }).eq('is_active', true),
+    supabase.from('staff').select('id', { count: 'exact', head: true }).eq('is_active', true),
+  ]);
+  if (a.error) throw a.error;
+  if (b.error) throw b.error;
+  return { students: a.count ?? 0, staff: b.count ?? 0 };
+}

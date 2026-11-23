@@ -43,3 +43,16 @@ export const primaryButton: ViewStyle = {
   borderWidth: 2,
   borderColor: colors.goldDeep,
 };
+
+// Jewel tones for bento tiles. Each has a meaning: forest = done, coral = duplicate, plum = rejected.
+export const tones = {
+  glass: { bg: colors.surface, fg: colors.ink, sub: colors.muted },
+  gold: { bg: '#E3B64F', fg: '#2E2208', sub: '#5A4210' },
+  teal: { bg: '#1D7F78', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
+  indigo: { bg: '#4A55A2', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
+  coral: { bg: '#C4472B', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.88)' },
+  plum: { bg: '#8A3E7B', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
+  forest: { bg: '#2F6B3A', fg: '#FFFFFF', sub: 'rgba(255,255,255,0.85)' },
+} as const;
+export type Tone = keyof typeof tones;
+export const avatarTones: Tone[] = ['teal', 'indigo', 'coral', 'plum', 'forest'];

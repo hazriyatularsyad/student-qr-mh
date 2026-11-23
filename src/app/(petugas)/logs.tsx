@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { BentoGrid, Tile, TileLabel, TileValue } from '@/components/Bento';
 import { LogList } from '@/components/LogList';
 import { Field, Panel } from '@/components/form';
 import { listLogs } from '@/lib/logs';
+import { summarize } from '@/lib/summary';
 import type { LogRow } from '@/lib/types';
 import { colors, radius } from '@/theme';
 
@@ -18,16 +20,21 @@ export default function Logs() {
   const [cls, setCls] = useState('');
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [rows, setRows] = useState<LogRow[]>([]);
+  const [day, setDay] = useState<LogRow[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
-      setRows(await listLogs({ q, class: cls, status }));
+      const [all, filtered] = await Promise.all([listLogs({}), listLogs({ q, class: cls, status })]);
+      setDay(all);
+      setRows(filtered);
       setError(null);
     } catch {
       setError('Gagal memuat log. Periksa koneksi.');
     }
   }, [q, cls, status]);
+
+  const sum = summarize(day);
 
   useEffect(() => {
     void load();
@@ -36,7 +43,25 @@ export default function Logs() {
   }, [load]);
 
   return (
-    <View style={s.wrap}>
+    <ScrollView contentContainerStyle={s.wrap}>
+      <BentoGrid>
+        <Tile tone="forest" span={2}>
+          <TileLabel tone="forest">Dijemput hari ini</TileLabel>
+          <TileValue tone="forest" size={48}>{sum.verified}</TileValue>
+        </Tile>
+        <Tile tone="coral">
+          <TileLabel tone="coral">Scan ganda</TileLabel>
+          <TileValue tone="coral">{sum.duplicate}</TileValue>
+        </Tile>
+        <Tile tone="plum">
+          <TileLabel tone="plum">QR ditolak</TileLabel>
+          <TileValue tone="plum">{sum.rejected}</TileValue>
+        </Tile>
+        <Tile tone="indigo" span={2}>
+          <TileLabel tone="indigo">Terakhir dijemput</TileLabel>
+          <Text style={s.last}>{sum.last ? `${sum.last.student_name}, kelas ${sum.last.class_name}` : 'Belum ada'}</Text>
+        </Tile>
+      </BentoGrid>
       <Panel>
         <Field icon="search-outline" placeholder="Cari nama atau NIS" value={q} onChangeText={setQ} />
         <Field placeholder="Kelas" value={cls} onChangeText={setCls} autoCapitalize="characters" />
@@ -50,8 +75,8 @@ export default function Logs() {
         </View>
       </Panel>
       {error && <Text style={s.error}>{error}</Text>}
-      <LogList rows={rows} />
-    </View>
+      <LogList rows={rows} inline />
+    </ScrollView>
   );
 }
 
@@ -60,5 +85,6 @@ const s = StyleSheet.create({
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: { minHeight: 44, paddingHorizontal: 16, borderRadius: radius, backgroundColor: 'rgba(255,255,255,0.45)', borderWidth: 1, borderColor: colors.line, justifyContent: 'center' },
   chipText: { fontSize: 15, fontWeight: '700', color: colors.ink },
+  last: { color: '#fff', fontSize: 20, fontWeight: '800' },
   error: { color: colors.danger, fontSize: 15 },
 });

@@ -6,5 +6,5 @@ export default function Index() {
   const { session, role, loading } = useAuth();
   if (loading) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator /></View>;
   if (!session || !role) return <Redirect href="/login" />;
-  return <Redirect href={role === 'admin' ? '/students' : '/scan'} />;
+  return <Redirect href={role === 'admin' ? '/home' : '/scan'} />;
 }

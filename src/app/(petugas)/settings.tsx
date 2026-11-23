@@ -1,12 +1,30 @@
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Panel } from '@/components/form';
+import { BentoGrid, Tile, TileLabel, TileValue } from '@/components/Bento';
+import { Icon } from '@/components/Icon';
 import { getSpeechOpts, getVoices, initVoices, setSpeechOpts, speechQueue } from '@/lib/tts';
-import { colors, radius, glass, primaryButton } from '@/theme';
+import { colors, tones, type Tone } from '@/theme';
 
 const KEY = 'speech-opts';
-const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, Math.round(v * 100) / 100));
+const clamp = (v: number) => Math.min(1.5, Math.max(0.5, Math.round(v * 100) / 100));
+
+function Stepper({ tone, label, value, onChange }: { tone: Tone; label: string; value: number; onChange: (v: number) => void }) {
+  return (
+    <Tile tone={tone} rows={2}>
+      <TileLabel tone={tone}>{label}</TileLabel>
+      <TileValue tone={tone} size={38}>{value.toFixed(2)}</TileValue>
+      <View style={s.steps}>
+        <Pressable accessibilityRole="button" accessibilityLabel={`Kurangi ${label}`} style={s.step} onPress={() => onChange(clamp(value - 0.05))}>
+          <Icon name="remove" size={26} color={colors.ink} />
+        </Pressable>
+        <Pressable accessibilityRole="button" accessibilityLabel={`Tambah ${label}`} style={s.step} onPress={() => onChange(clamp(value + 0.05))}>
+          <Icon name="add" size={26} color={colors.ink} />
+        </Pressable>
+      </View>
+    </Tile>
+  );
+}
 
 export default function Settings() {
   const [rate, setRate] = useState(getSpeechOpts().rate);
@@ -21,51 +39,51 @@ export default function Settings() {
     });
   }, []);
 
-  const update = (next: { rate: number; pitch: number }) => {
-    setRate(next.rate); setPitch(next.pitch); setSpeechOpts(next);
-    AsyncStorage.setItem(KEY, JSON.stringify({ ...next, voice })).catch(() => {});
+  const save = (next: { rate: number; pitch: number; voice?: string }) => {
+    setSpeechOpts(next);
+    AsyncStorage.setItem(KEY, JSON.stringify(next)).catch(() => {});
   };
-
-  const Stepper = ({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) => (
-    <View style={s.row}>
-      <Text style={s.label}>{label}: {value.toFixed(2)}</Text>
-      <Pressable style={s.step} onPress={() => onChange(clamp(value - 0.05, 0.5, 1.5))}><Text style={s.stepText}>−</Text></Pressable>
-      <Pressable style={s.step} onPress={() => onChange(clamp(value + 0.05, 0.5, 1.5))}><Text style={s.stepText}>+</Text></Pressable>
-    </View>
-  );
+  const voiceName = getVoices().find((v) => v.identifier === voice)?.name ?? voice;
 
   return (
-    <View style={s.wrap}>
-      <Panel>
-      <Stepper label="Kecepatan suara" value={rate} onChange={(v) => update({ rate: v, pitch })} />
-      <Stepper label="Nada suara" value={pitch} onChange={(v) => update({ rate, pitch: v })} />
-      <Text style={s.label}>
-        {voiceCount === 0 ? 'Suara Indonesia belum terpasang di HP ini. Pasang lewat Pengaturan HP > Text-to-speech.' : `Suara: ${getVoices().find((v) => v.identifier === voice)?.name ?? voice} (${voiceCount} tersedia)`}
-      </Text>
-      {voiceCount > 1 && (
-        <Pressable style={s.btn} onPress={() => {
-          const list = getVoices();
-          const next = list[(list.findIndex((v) => v.identifier === voice) + 1) % list.length];
-          setSpeechOpts({ voice: next.identifier }); setVoice(next.identifier);
-          AsyncStorage.setItem(KEY, JSON.stringify({ rate, pitch, voice: next.identifier })).catch(() => {});
-        }}>
-          <Text style={s.btnText}>Ganti suara</Text>
-        </Pressable>
-      )}
-      <Pressable style={s.btn} onPress={() => speechQueue.enqueue('Tes speaker. Aksa, kelas tiga A, sudah dijemput.')}>
-        <Text style={s.btnText}>Tes Speaker</Text>
-      </Pressable>
-      </Panel>
-    </View>
+    <ScrollView contentContainerStyle={s.wrap}>
+      <BentoGrid>
+        <Stepper tone="indigo" label="Kecepatan" value={rate} onChange={(v) => { setRate(v); save({ rate: v, pitch, voice }); }} />
+        <Stepper tone="plum" label="Nada" value={pitch} onChange={(v) => { setPitch(v); save({ rate, pitch: v, voice }); }} />
+        <Tile tone="teal" span={2}>
+          <TileLabel tone="teal">Suara</TileLabel>
+          <Text style={s.voice}>
+            {voiceCount === 0 ? 'Suara Indonesia belum terpasang di HP ini. Pasang lewat Pengaturan HP, Text-to-speech.' : `${voiceName} (${voiceCount} tersedia)`}
+          </Text>
+          {voiceCount > 1 && (
+            <Pressable accessibilityRole="button" style={s.cream} onPress={() => {
+              const list = getVoices();
+              const next = list[(list.findIndex((v) => v.identifier === voice) + 1) % list.length];
+              setVoice(next.identifier); save({ rate, pitch, voice: next.identifier });
+            }}>
+              <Icon name="swap-horizontal" size={20} color={colors.ink} />
+              <Text style={s.creamText}>Ganti suara</Text>
+            </Pressable>
+          )}
+        </Tile>
+        <Tile tone="gold" span={2} onPress={() => speechQueue.enqueue('Tes speaker. Aksa, kelas tiga A, sudah dijemput.')} label="Tes Speaker" style={{ minHeight: 88, justifyContent: 'center' }}>
+          <View style={s.testRow}>
+            <Icon name="volume-high" size={28} color={tones.gold.fg} />
+            <Text style={s.testText}>Tes Speaker</Text>
+          </View>
+        </Tile>
+      </BentoGrid>
+    </ScrollView>
   );
 }
 
 const s = StyleSheet.create({
-  wrap: { flex: 1, padding: 20, gap: 16, backgroundColor: colors.bg },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  label: { flex: 1, fontSize: 17, color: colors.ink },
-  step: { width: 52, height: 52, borderRadius: radius, ...glass, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.line },
-  stepText: { fontSize: 24, color: colors.ink },
-  btn: { minHeight: 56, borderRadius: radius, ...primaryButton, alignItems: 'center', justifyContent: 'center' },
-  btnText: { color: colors.ink, fontSize: 18, fontWeight: '700' },
+  wrap: { padding: 12 },
+  steps: { flexDirection: 'row', gap: 8 },
+  step: { flex: 1, minHeight: 48, borderRadius: 14, backgroundColor: colors.cream, alignItems: 'center', justifyContent: 'center' },
+  voice: { color: '#fff', fontSize: 18, fontWeight: '700' },
+  cream: { minHeight: 48, borderRadius: 14, backgroundColor: colors.cream, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center' },
+  creamText: { fontSize: 16, fontWeight: '800', color: colors.ink },
+  testRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  testText: { fontSize: 22, fontWeight: '800', color: colors.ink },
 });

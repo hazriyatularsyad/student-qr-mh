@@ -9,7 +9,48 @@ const icon = { verified: 'checkmark-circle', duplicate: 'warning', rejected: 'cl
 const label = { verified: 'Terverifikasi', duplicate: 'Duplikat', rejected: 'Ditolak' } as const;
 const time = (iso: string) => new Date(iso).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
-export function LogList({ rows }: { rows: LogRow[] }) {
+function Row({ r }: { r: LogRow }) {
+  return (
+    <View style={s.row}>
+      <View style={{ flex: 1, gap: 2 }}>
+        <Text style={s.name}>{r.student_name ?? 'QR tidak dikenal'}</Text>
+        {r.class_name && <Text style={s.meta}>Kelas {r.class_name}, NIS {r.student_nis}</Text>}
+        {r.guardian_name && <Text style={s.meta}>Wali: {r.guardian_name} ({r.relationship})</Text>}
+        {r.substitute_name && <Text style={s.sub}>Pengganti: {r.substitute_name} ({r.substitute_status})</Text>}
+      </View>
+      <View style={s.side}>
+        <View style={s.statusRow}>
+          <Icon name={icon[r.status]} size={16} color={tone[r.status]} />
+          <Text style={[s.status, { color: tone[r.status] }]}>{label[r.status]}</Text>
+        </View>
+        <Text style={s.meta}>{time(r.scanned_at)}</Text>
+        <Text style={s.meta}>{r.scanner_name}</Text>
+      </View>
+    </View>
+  );
+}
+
+const Empty = () => (
+  <View style={s.emptyBox}>
+    <Icon name="documents-outline" size={36} color={colors.muted} />
+    <Text style={s.empty}>Belum ada catatan untuk filter ini.</Text>
+  </View>
+);
+
+// inline: render every row in place so a parent ScrollView owns the scrolling.
+export function LogList({ rows, inline }: { rows: LogRow[]; inline?: boolean }) {
+  if (inline) {
+    return (
+      <View style={s.list}>
+        {rows.length === 0 ? <Empty /> : rows.map((r, i) => (
+          <View key={r.id}>
+            {i > 0 && <Separator />}
+            <Row r={r} />
+          </View>
+        ))}
+      </View>
+    );
+  }
   return (
     <FlatList
       style={s.list}

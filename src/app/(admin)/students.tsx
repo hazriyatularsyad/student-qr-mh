@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Btn, Field, Panel, Separator } from '@/components/form';
+import { Avatar } from '@/components/Bento';
 import { Icon } from '@/components/Icon';
 import { listStudents, saveStudent, type Student } from '@/lib/admin';
 import { useWide } from '@/lib/layout';
@@ -60,6 +61,7 @@ export default function Students() {
             ListEmptyComponent={<Text style={s.empty}>Belum ada murid. Tambahkan satu, atau impor dari CSV.</Text>}
             renderItem={({ item }) => (
               <Pressable style={[s.row, !item.is_active && { opacity: 0.5 }]} onPress={() => router.push(`/student/${item.nis}`)}>
+                <Avatar name={item.full_name} seed={item.nis} />
                 <View style={{ flex: 1 }}>
                   <Text style={s.name}>{item.full_name}</Text>
                   <Text style={s.meta}>NIS {item.nis}{item.is_active ? '' : ', nonaktif'}</Text>
