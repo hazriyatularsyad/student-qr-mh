@@ -60,7 +60,7 @@ export default function Students() {
             ItemSeparatorComponent={Separator}
             ListEmptyComponent={<Text style={s.empty}>Belum ada murid. Tambahkan satu, atau impor dari CSV.</Text>}
             renderItem={({ item }) => (
-              <Pressable style={[s.row, !item.is_active && { opacity: 0.5 }]} onPress={() => router.push(`/student/${item.nis}`)}>
+              <Pressable style={[s.row, !item.is_active && { opacity: 0.5 }]} onPress={() => router.push(`/students/${item.nis}`)}>
                 <Avatar name={item.full_name} seed={item.nis} />
                 <View style={{ flex: 1 }}>
                   <Text style={s.name}>{item.full_name}</Text>

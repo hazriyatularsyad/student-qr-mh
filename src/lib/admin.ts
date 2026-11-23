@@ -9,7 +9,7 @@ export type Student = {
   nis: string; full_name: string; nickname: string | null; class_name: string;
   photo_url: string | null; is_active: boolean;
 };
-export type Guardian = { student_nis: string; full_name: string; relationship: string; phone_number: string; is_active: boolean };
+export type Guardian = { id: string; student_nis: string; full_name: string; relationship: string; phone_number: string; is_active: boolean };
 export type StaffRow = { id: string; full_name: string; role: 'petugas' | 'admin'; is_active: boolean };
 
 export async function importStudents(rows: ImportRow[]): Promise<ImportResult> {
@@ -51,7 +51,7 @@ export async function setStudentActive(nis: string, active: boolean): Promise<vo
 
 export async function getGuardian(nis: string): Promise<Guardian | null> {
   const { data, error } = await supabase.from('guardians')
-    .select('student_nis, full_name, relationship, phone_number, is_active').eq('student_nis', nis).maybeSingle();
+    .select('id, student_nis, full_name, relationship, phone_number, is_active').eq('student_nis', nis).maybeSingle();
   if (error) throw error;
   return data as Guardian | null;
 }
@@ -89,4 +89,11 @@ export async function getCounts(): Promise<{ students: number; staff: number }> 
   if (a.error) throw a.error;
   if (b.error) throw b.error;
   return { students: a.count ?? 0, staff: b.count ?? 0 };
+}
+
+// Admin-only (RLS). Null when the QR was issued before tokens were stored: reissue to get a downloadable one.
+export async function getQrToken(guardianId: string): Promise<string | null> {
+  const { data, error } = await supabase.from('guardian_qr_tokens').select('token').eq('guardian_id', guardianId).maybeSingle();
+  if (error) throw error;
+  return (data?.token as string | undefined) ?? null;
 }

@@ -29,3 +29,14 @@ export const tabScreenOptions = {
 // Filled icon when active, outline when not, so state never relies on colour alone.
 export const tabIcon = (base: string) => ({ focused, color }: { focused: boolean; color: ColorValue }) =>
   createElement(Icon, { name: (focused ? base : `${base}-outline`) as IconName, size: 24, color: String(color) });
+
+// Same header as the tabs, plus a lime back arrow for pushed screens.
+export const stackScreenOptions = {
+  headerShadowVisible: false,
+  headerTitleAlign: 'left' as const,
+  headerStyle: { backgroundColor: colors.bg },
+  headerTintColor: colors.gold,
+  headerTitleStyle: { fontSize: 20, fontWeight: '800' as const, letterSpacing: -0.2, color: '#FFFFFF' },
+  headerRight: () => createElement(LogoutButton),
+  contentStyle: { backgroundColor: colors.bg },
+};
