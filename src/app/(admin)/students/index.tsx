@@ -5,7 +5,7 @@ import { Btn, Field, Panel, Separator } from '@/components/form';
 import { Avatar, BentoGrid, IconBadge, Tile, TileLabel, TileValue } from '@/components/Bento';
 import { Icon } from '@/components/Icon';
 import { listStudents, saveStudent, type Student } from '@/lib/admin';
-import { countByGrade, gradeOf, GRADES } from '@/lib/grade';
+import { countByGrade, gradeOf, GRADES, normalizeClassName } from '@/lib/grade';
 import { useWide } from '@/lib/layout';
 import { colors, glass, radius, type Tone } from '@/theme';
 
@@ -31,7 +31,7 @@ export default function Students() {
   const save = async () => {
     if (!form.nis.trim() || !form.full_name.trim() || !form.class_name.trim()) { setMsg('NIS, nama, dan kelas wajib diisi.'); return; }
     try {
-      await saveStudent({ nis: form.nis.trim(), full_name: form.full_name.trim(), nickname: form.nickname.trim() || null, class_name: form.class_name.trim() });
+      await saveStudent({ nis: form.nis.trim(), full_name: form.full_name.trim(), nickname: form.nickname.trim() || null, class_name: normalizeClassName(form.class_name) });
       setForm(EMPTY); setMsg('Murid disimpan.'); setOpen(false); void load();
     } catch { setMsg('Gagal menyimpan murid.'); }
   };

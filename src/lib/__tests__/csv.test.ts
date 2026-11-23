@@ -41,3 +41,8 @@ test('wrong header is a row-0 error', () => {
   expect(r.rows).toEqual([]);
   expect(r.errors[0].row).toBe(0);
 });
+
+test('a class typed as "Kelas, 3-A" is stored as "3-A"', () => {
+  const r = parseStudentsCsv(`${H}\n001,Budi,,"Kelas, 3-A",Dewi,Ibu,082\n`);
+  expect(r.rows[0].kelas).toBe('3-A');
+});

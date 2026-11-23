@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import { normalizeClassName } from '@/lib/grade';
 
 export type ImportRow = {
   nis: string; nama_murid: string; panggilan: string; kelas: string;
@@ -29,6 +30,7 @@ export function parseStudentsCsv(text: string): { rows: ImportRow[]; errors: Csv
   const seen = new Set<string>();
   parsed.data.forEach((raw, i) => {
     const row = Object.fromEntries(COLUMNS.map((c) => [c, (raw[c] ?? '').trim()])) as ImportRow;
+    row.kelas = normalizeClassName(row.kelas);
     const empty = REQUIRED.filter((c) => !row[c]);
     if (empty.length) errors.push({ row: i + 1, message: `Kolom ${empty.join(', ')} wajib diisi.` });
     if (row.nis && seen.has(row.nis)) errors.push({ row: i + 1, message: `NIS ${row.nis} dobel di file.` });

@@ -1,9 +1,14 @@
 export const GRADES = [1, 2, 3, 4, 5, 6] as const;
 export type Grade = (typeof GRADES)[number];
 
-// "3-A" -> 3, "12-IPA" -> 12, "TK" -> null. The grade is the leading number of the class name.
+// Drops a typed "Kelas" prefix: "Kelas, 3-A" -> "3-A". Class names are stored without it.
+export function normalizeClassName(raw: string): string {
+  return raw.replace(/^\s*kelas\W*/i, '').trim();
+}
+
+// "3-A" -> 3, "Kelas, 3-A" -> 3, "12-IPA" -> 12, "TK" -> null. The grade is the leading number.
 export function gradeOf(className: string): number | null {
-  const m = /^\s*(\d+)/.exec(className);
+  const m = /^\s*(\d+)/.exec(normalizeClassName(className));
   return m ? Number(m[1]) : null;
 }
 
