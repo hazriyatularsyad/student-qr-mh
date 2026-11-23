@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Heading, Panel } from '@/components/form';
-import { useAuth } from '@/lib/auth';
+import { Panel } from '@/components/form';
 import { getSpeechOpts, getVoices, initVoices, setSpeechOpts, speechQueue } from '@/lib/tts';
 import { colors, radius, glass, primaryButton } from '@/theme';
 
@@ -10,7 +9,6 @@ const KEY = 'speech-opts';
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, Math.round(v * 100) / 100));
 
 export default function Settings() {
-  const { signOut } = useAuth();
   const [rate, setRate] = useState(getSpeechOpts().rate);
   const [pitch, setPitch] = useState(getSpeechOpts().pitch);
   const [voice, setVoice] = useState(getSpeechOpts().voice);
@@ -38,7 +36,6 @@ export default function Settings() {
 
   return (
     <View style={s.wrap}>
-      <Heading>Pengaturan suara</Heading>
       <Panel>
       <Stepper label="Kecepatan suara" value={rate} onChange={(v) => update({ rate: v, pitch })} />
       <Stepper label="Nada suara" value={pitch} onChange={(v) => update({ rate, pitch: v })} />
@@ -59,9 +56,6 @@ export default function Settings() {
         <Text style={s.btnText}>Tes Speaker</Text>
       </Pressable>
       </Panel>
-      <Pressable style={s.btn} onPress={() => void signOut()}>
-        <Text style={s.btnText}>Keluar</Text>
-      </Pressable>
     </View>
   );
 }

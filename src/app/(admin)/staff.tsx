@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Btn, Field, Heading, Panel, Separator } from '@/components/form';
+import { Btn, Field, Panel, Separator } from '@/components/form';
 import { createStaff, listStaff, setStaffActive, type StaffRow } from '@/lib/admin';
 import { useWide } from '@/lib/layout';
 import { colors, glass, radius } from '@/theme';
@@ -23,7 +23,6 @@ export default function Staff() {
 
   return (
     <View style={s.wrap}>
-      <Heading>Petugas</Heading>
       {msg && <Text style={s.msg}>{msg}</Text>}
       <View style={[{ gap: 12 }, wide && { flexDirection: 'row', alignItems: 'flex-start' }]}>
         <Panel style={wide ? { width: 320 } : undefined}>
@@ -37,7 +36,7 @@ export default function Staff() {
               </Pressable>
             ))}
           </View>
-          <Btn label="Buat akun" onPress={create} />
+          <Btn icon="person-add-outline" label="Buat akun" onPress={create} />
         </Panel>
         <FlatList
           style={[s.list, { flex: 1 }]}

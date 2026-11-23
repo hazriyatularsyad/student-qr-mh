@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Btn, Field, Heading, Panel, Separator } from '@/components/form';
+import { Btn, Field, Panel, Separator } from '@/components/form';
+import { Icon } from '@/components/Icon';
 import { listStudents, saveStudent, type Student } from '@/lib/admin';
 import { useWide } from '@/lib/layout';
 import { colors, glass, radius } from '@/theme';
@@ -36,21 +37,21 @@ export default function Students() {
       <Field placeholder="Nama lengkap" value={form.full_name} onChangeText={(v) => setForm({ ...form, full_name: v })} />
       <Field placeholder="Panggilan (dibaca suara)" value={form.nickname} onChangeText={(v) => setForm({ ...form, nickname: v })} />
       <Field placeholder="Kelas, mis. 3-A" value={form.class_name} onChangeText={(v) => setForm({ ...form, class_name: v })} />
-      <Btn label="Simpan murid" onPress={save} />
+      <Btn icon="save-outline" label="Simpan murid" onPress={save} />
     </Panel>
   );
 
   return (
     <View style={s.wrap}>
       <View style={s.head}>
-        <Heading>Murid</Heading>
-        {!wide && <Btn label={open ? 'Tutup form' : 'Tambah murid'} onPress={() => setOpen(!open)} />}
+        <Text style={s.count}>{rows.length} murid</Text>
+        {!wide && <Btn icon={open ? 'close' : 'add'} label={open ? 'Tutup form' : 'Tambah murid'} onPress={() => setOpen(!open)} />}
       </View>
       {msg && <Text style={s.msg}>{msg}</Text>}
       <View style={[s.body, wide && { flexDirection: 'row', alignItems: 'flex-start' }]}>
         {(wide || open) && formPanel}
         <View style={{ flex: 1, gap: 10 }}>
-          <Field placeholder="Cari nama atau NIS" value={q} onChangeText={setQ} />
+          <Field icon="search-outline" placeholder="Cari nama atau NIS" value={q} onChangeText={setQ} />
           <FlatList
             style={s.list}
             data={rows}
@@ -64,6 +65,7 @@ export default function Students() {
                   <Text style={s.meta}>NIS {item.nis}{item.is_active ? '' : ', nonaktif'}</Text>
                 </View>
                 <Text style={s.cls}>{item.class_name}</Text>
+                <Icon name="chevron-forward" size={20} color={colors.muted} />
               </Pressable>
             )}
           />
@@ -77,6 +79,7 @@ const s = StyleSheet.create({
   wrap: { flex: 1, padding: 16, gap: 12 },
   head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
   body: { flex: 1, gap: 12 },
+  count: { fontSize: 16, fontWeight: '700', color: colors.muted },
   msg: { color: colors.goldDeep, fontSize: 15, fontWeight: '600' },
   list: { ...glass, borderRadius: radius, flexGrow: 0 },
   row: { flexDirection: 'row', alignItems: 'center', padding: 16, gap: 12 },

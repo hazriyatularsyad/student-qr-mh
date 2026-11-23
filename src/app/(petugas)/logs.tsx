@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LogList } from '@/components/LogList';
-import { Field, Heading, Panel } from '@/components/form';
+import { Field, Panel } from '@/components/form';
 import { listLogs } from '@/lib/logs';
 import type { LogRow } from '@/lib/types';
 import { colors, radius } from '@/theme';
@@ -37,9 +37,8 @@ export default function Logs() {
 
   return (
     <View style={s.wrap}>
-      <Heading>Log hari ini</Heading>
       <Panel>
-        <Field placeholder="Cari nama atau NIS" value={q} onChangeText={setQ} />
+        <Field icon="search-outline" placeholder="Cari nama atau NIS" value={q} onChangeText={setQ} />
         <Field placeholder="Kelas" value={cls} onChangeText={setCls} autoCapitalize="characters" />
         <View style={s.chips}>
           {STATUSES.map((st) => (

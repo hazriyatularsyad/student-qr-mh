@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Icon } from '@/components/Icon';
 import { usePhotoUrl } from '@/lib/photo';
 import type { CheckResult, Substitute } from '@/lib/types';
 import { colors, radius, glass, primaryButton, fonts } from '@/theme';
@@ -20,8 +21,19 @@ export function ConfirmSheet({ result, busy, error, onConfirm, onClose }: Props)
   const s = result.student;
   const tone = result.status === 'ready' ? colors.ok : result.status === 'duplicate' ? colors.warn : colors.danger;
 
+  const banner = {
+    ready: { icon: 'checkmark-circle', text: 'Siap dikonfirmasi' },
+    duplicate: { icon: 'warning', text: 'Sudah dijemput' },
+    rejected: { icon: 'close-circle', text: 'QR ditolak' },
+  } as const;
+  const b = banner[result.status];
+
   return (
     <View style={[styles.sheet, { borderTopColor: tone }]}>
+      <View style={styles.banner}>
+        <Icon name={b.icon} size={22} color={tone} />
+        <Text style={[styles.bannerText, { color: tone }]}>{b.text}</Text>
+      </View>
       {s && (
         <View style={styles.row}>
           {photo ? <Image source={{ uri: photo }} style={styles.photo} /> : <View style={[styles.photo, styles.noPhoto]} />}
@@ -46,9 +58,11 @@ export function ConfirmSheet({ result, busy, error, onConfirm, onClose }: Props)
       {result.status === 'ready' && !other && (
         <>
           <Pressable style={[styles.btn, primaryButton]} disabled={busy} onPress={() => onConfirm(undefined)}>
+            <Icon name="checkmark" size={22} color={colors.ink} />
             <Text style={[styles.btnText, { color: colors.ink }]}>Konfirmasi</Text>
           </Pressable>
           <Pressable style={[styles.btn, styles.ghost]} disabled={busy} onPress={() => setOther(true)}>
+            <Icon name="person-add-outline" size={20} color={colors.ink} />
             <Text style={[styles.btnText, { color: colors.ink }]}>Dijemput orang lain</Text>
           </Pressable>
         </>
@@ -68,7 +82,7 @@ export function ConfirmSheet({ result, busy, error, onConfirm, onClose }: Props)
         </>
       )}
 
-      <Pressable style={styles.close} onPress={onClose}><Text style={styles.meta}>Tutup</Text></Pressable>
+      <Pressable style={styles.close} onPress={onClose}><Text style={styles.close_text}>Tutup</Text></Pressable>
     </View>
   );
 }
@@ -82,9 +96,12 @@ const styles = StyleSheet.create({
   meta: { fontSize: 16, color: colors.muted },
   guardian: { fontSize: 18, color: colors.ink },
   warning: { fontSize: 18, fontWeight: '600' },
-  btn: { minHeight: 56, borderRadius: radius, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 },
+  btn: { minHeight: 56, borderRadius: radius, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 },
   ghost: { backgroundColor: 'rgba(255,255,255,0.45)', borderWidth: 1, borderColor: colors.line },
   btnText: { color: '#fff', fontSize: 18, fontWeight: '700' },
   input: { minHeight: 52, borderWidth: 1, borderColor: colors.line, borderRadius: radius, paddingHorizontal: 14, fontSize: 17 },
-  close: { alignItems: 'center', padding: 8 },
+  close: { alignItems: 'center', justifyContent: 'center', minHeight: 44 },
+  close_text: { fontSize: 16, fontWeight: '700', color: colors.muted },
+  banner: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  bannerText: { fontSize: 15, fontWeight: '800' },
 });
