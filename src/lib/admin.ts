@@ -49,6 +49,11 @@ export async function setStudentActive(nis: string, active: boolean): Promise<vo
   if (error) throw error;
 }
 
+export async function deleteStudent(nis: string): Promise<void> {
+  const { error } = await supabase.from('students').delete().eq('nis', nis);
+  if (error) throw error;
+}
+
 export async function getGuardian(nis: string): Promise<Guardian | null> {
   const { data, error } = await supabase.from('guardians')
     .select('id, student_nis, full_name, relationship, phone_number, is_active').eq('student_nis', nis).maybeSingle();

@@ -1,12 +1,15 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import StudentDetail from '@/app/(admin)/students/[nis]';
-import { getGuardian, getQrToken, listStudents } from '@/lib/admin';
+import { deleteStudent, getGuardian, getQrToken, listStudents, saveStudent } from '@/lib/admin';
+import { confirmAction } from '@/lib/confirm';
 import { downloadQr } from '@/lib/qrDownload';
 
-jest.mock('expo-router', () => ({ useLocalSearchParams: () => ({ nis: '00101' }) }));
+const mockReplace = jest.fn();
+jest.mock('expo-router', () => ({ useLocalSearchParams: () => ({ nis: '00101' }), useRouter: () => ({ replace: mockReplace }) }));
 jest.mock('react-native-qrcode-svg', () => 'QRCode');
 jest.mock('expo-image-picker', () => ({}));
 jest.mock('@/lib/admin');
+jest.mock('@/lib/confirm');
 jest.mock('@/lib/qrDownload');
 jest.mock('@/lib/supabase', () => ({ supabase: { storage: { from: () => ({ createSignedUrl: async () => ({ data: null }) }) } } }));
 
@@ -34,4 +37,30 @@ test('a guardian whose QR was issued before token storage asks for a reissue', a
   await render(<StudentDetail />);
   expect(await screen.findByText(/QR belum tersimpan/)).toBeTruthy();
   expect(screen.queryByText('Unduh QR')).toBeNull();
+});
+
+test('edits student data', async () => {
+  (getQrToken as jest.Mock).mockResolvedValue(null);
+  (saveStudent as jest.Mock).mockResolvedValue(undefined);
+  await render(<StudentDetail />);
+  await fireEvent.press(await screen.findByText('Edit data murid'));
+  await fireEvent.changeText(screen.getByDisplayValue('Aksa Pratama'), 'Aksa Baru');
+  await fireEvent.changeText(screen.getByDisplayValue('3-A'), '4-b');
+  await fireEvent.press(screen.getByText('Simpan perubahan'));
+  await waitFor(() => expect(saveStudent).toHaveBeenCalledWith({
+    nis: '00101',
+    full_name: 'Aksa Baru',
+    nickname: 'Aksa',
+    class_name: '4-b',
+  }));
+});
+
+test('deletes student after confirmation', async () => {
+  (getQrToken as jest.Mock).mockResolvedValue(null);
+  (deleteStudent as jest.Mock).mockResolvedValue(undefined);
+  (confirmAction as jest.Mock).mockImplementation((_t, _m, onYes) => onYes());
+  await render(<StudentDetail />);
+  await fireEvent.press(await screen.findByText('Hapus murid'));
+  await waitFor(() => expect(deleteStudent).toHaveBeenCalledWith('00101'));
+  expect(mockReplace).toHaveBeenCalledWith('/students');
 });

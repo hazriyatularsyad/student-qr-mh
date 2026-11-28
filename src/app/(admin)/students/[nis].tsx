@@ -1,27 +1,34 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import QRCode from 'react-native-qrcode-svg';
 import { Avatar, BentoGrid, IconBadge, Tile, TileLabel } from '@/components/Bento';
 import { Btn, Field, Panel } from '@/components/form';
-import { getGuardian, getQrToken, issueQr, listStudents, revokeQr, setStudentActive, uploadPhoto, type Guardian, type Student } from '@/lib/admin';
+import { deleteStudent, getGuardian, getQrToken, issueQr, listStudents, revokeQr, saveStudent, setStudentActive, uploadPhoto, type Guardian, type Student } from '@/lib/admin';
+import { confirmAction } from '@/lib/confirm';
+import { normalizeClassName } from '@/lib/grade';
 import { usePhotoUrl } from '@/lib/photo';
 import { downloadQr } from '@/lib/qrDownload';
 import { colors, radius } from '@/theme';
 
 export default function StudentDetail() {
+  const router = useRouter();
   const { nis } = useLocalSearchParams<{ nis: string }>();
   const [student, setStudent] = useState<Student | null>(null);
   const [guardian, setGuardian] = useState<Guardian | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [form, setForm] = useState({ full_name: '', relationship: '', phone_number: '' });
+  const [studentForm, setStudentForm] = useState({ full_name: '', nickname: '', class_name: '' });
+  const [editing, setEditing] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const photo = usePhotoUrl(student?.photo_url);
 
   const load = useCallback(async () => {
     const [list, g] = await Promise.all([listStudents(nis), getGuardian(nis)]);
-    setStudent(list.find((x) => x.nis === nis) ?? null);
+    const found = list.find((x) => x.nis === nis) ?? null;
+    setStudent(found);
+    if (found) setStudentForm({ full_name: found.full_name, nickname: found.nickname ?? '', class_name: found.class_name });
     setGuardian(g);
     if (g) setForm({ full_name: g.full_name, relationship: g.relationship, phone_number: g.phone_number });
     setToken(g?.is_active ? await getQrToken(g.id) : null);
@@ -47,6 +54,42 @@ export default function StudentDetail() {
     const r = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.6, allowsEditing: true, aspect: [1, 1] });
     if (r.canceled) return;
     try { await uploadPhoto(nis, r.assets[0].uri); setMsg('Foto disimpan.'); await load(); } catch { setMsg('Gagal mengunggah foto.'); }
+  };
+
+  const saveEdit = async () => {
+    if (!studentForm.full_name.trim() || !studentForm.class_name.trim()) {
+      setMsg('Nama lengkap dan kelas wajib diisi.');
+      return;
+    }
+    try {
+      await saveStudent({
+        nis,
+        full_name: studentForm.full_name.trim(),
+        nickname: studentForm.nickname.trim() || null,
+        class_name: normalizeClassName(studentForm.class_name),
+      });
+      setEditing(false);
+      setMsg('Data murid diperbarui.');
+      await load();
+    } catch {
+      setMsg('Gagal memperbarui data murid.');
+    }
+  };
+
+  const removeStudent = () => {
+    confirmAction(
+      'Hapus murid?',
+      `Data ${student?.full_name ?? nis} akan dihapus permanen.`,
+      async () => {
+        try {
+          await deleteStudent(nis);
+          router.replace('/students');
+        } catch {
+          setMsg('Gagal menghapus murid.');
+        }
+      },
+      'Hapus',
+    );
   };
 
   const active = student?.is_active ?? false;
@@ -107,9 +150,21 @@ export default function StudentDetail() {
 
       <Panel style={{ marginTop: 12 }}>
         <Text style={s.section}>Murid</Text>
+        {editing ? (
+          <>
+            <Field placeholder="Nama lengkap" value={studentForm.full_name} onChangeText={(v) => setStudentForm({ ...studentForm, full_name: v })} />
+            <Field placeholder="Panggilan (dibaca suara)" value={studentForm.nickname} onChangeText={(v) => setStudentForm({ ...studentForm, nickname: v })} />
+            <Field placeholder="Kelas, mis. 3-A" value={studentForm.class_name} onChangeText={(v) => setStudentForm({ ...studentForm, class_name: v })} />
+            <Btn icon="save-outline" label="Simpan perubahan" onPress={saveEdit} />
+            <Btn label="Batal" tone={colors.line} onPress={() => setEditing(false)} />
+          </>
+        ) : (
+          <Btn icon="create-outline" label="Edit data murid" onPress={() => setEditing(true)} />
+        )}
         <Btn icon="image-outline" label="Pilih foto murid" onPress={pickPhoto} />
         <Btn label={active ? 'Nonaktifkan murid' : 'Aktifkan murid'} tone={colors.warn}
           onPress={async () => { await setStudentActive(nis, !active); await load(); }} />
+        <Btn icon="trash-outline" label="Hapus murid" tone={colors.danger} onPress={removeStudent} />
       </Panel>
     </ScrollView>
   );

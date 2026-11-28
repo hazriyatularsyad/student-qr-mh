@@ -5,7 +5,7 @@ import { Btn, Field, Panel, Separator } from '@/components/form';
 import { Avatar, BentoGrid, IconBadge, Tile, TileLabel, TileValue } from '@/components/Bento';
 import { Icon } from '@/components/Icon';
 import { listStudents, saveStudent, type Student } from '@/lib/admin';
-import { countByGrade, gradeOf, GRADES, normalizeClassName } from '@/lib/grade';
+import { countByGrade, GRADES, normalizeClassName } from '@/lib/grade';
 import { useWide } from '@/lib/layout';
 import { colors, glass, radius, type Tone } from '@/theme';
 
@@ -20,7 +20,6 @@ export default function Students() {
   const [rows, setRows] = useState<Student[]>([]);
   const [form, setForm] = useState(EMPTY);
   const [open, setOpen] = useState(false);
-  const [grade, setGrade] = useState<number | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -37,7 +36,6 @@ export default function Students() {
   };
 
   const counts = countByGrade(rows);
-  const shown = grade === null ? rows : rows.filter((r) => gradeOf(r.class_name) === grade);
 
   const formPanel = (
     <Panel style={wide ? { width: 320 } : undefined}>
@@ -52,20 +50,19 @@ export default function Students() {
   return (
     <ScrollView contentContainerStyle={s.wrap} keyboardShouldPersistTaps="handled">
       <View style={s.head}>
-        <Text style={s.count}>{grade === null ? `${rows.length} murid` : `${shown.length} murid kelas ${grade}`}</Text>
+        <Text style={s.count}>{rows.length} murid</Text>
         {!wide && <Btn icon={open ? 'close' : 'add'} label={open ? 'Tutup form' : 'Tambah murid'} onPress={() => setOpen(!open)} />}
       </View>
       {msg && <Text style={s.msg}>{msg}</Text>}
       <BentoGrid>
         {GRADES.map((g, i) => {
-          const on = grade === g;
           const tone = FOLDER_TONES[i];
           return (
-            <Tile key={g} tone={tone} shape="folder" selected={on}
+            <Tile key={g} tone={tone} shape="folder"
               label={`Kelas ${g}, ${counts[g]} murid`}
-              onPress={() => setGrade(on ? null : g)}
-              style={{ minHeight: 118, justifyContent: 'space-between', opacity: grade === null || on ? 1 : 0.4 }}>
-              <IconBadge name={on ? 'checkmark' : 'folder-open'} size={36} />
+              onPress={() => router.push(`/students/kelas/${g}`)}
+              style={{ minHeight: 118, justifyContent: 'space-between' }}>
+              <IconBadge name="folder-open" size={36} />
               <View>
                 <TileValue tone={tone} size={26}>Kelas {g}</TileValue>
                 <TileLabel tone={tone}>{counts[g]} murid</TileLabel>
@@ -79,9 +76,9 @@ export default function Students() {
         <View style={{ flex: 1, gap: 10 }}>
           <Field icon="search-outline" placeholder="Cari nama atau NIS" value={q} onChangeText={setQ} />
           <View style={s.list}>
-            {shown.length === 0 ? (
-              <Text style={s.empty}>{grade !== null ? `Belum ada murid di kelas ${grade}.` : 'Belum ada murid. Tambahkan satu, atau impor dari CSV.'}</Text>
-            ) : shown.map((item, i) => (
+            {rows.length === 0 ? (
+              <Text style={s.empty}>Belum ada murid. Tambahkan satu, atau impor dari CSV.</Text>
+            ) : rows.map((item, i) => (
               <View key={item.nis}>
                 {i > 0 && <Separator />}
                 <Pressable style={[s.row, !item.is_active && { opacity: 0.5 }]} onPress={() => router.push(`/students/${item.nis}`)}>
